@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      基于Hexo的博客搭建 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="写在前面的话这是我的第一篇博文。其实想自己搭一个博客挺久了，之前一直觉得自己的水平可能还没到可以开技术博客的阶段，但是昨天还是鼓起勇气捣鼓了一个，可能会把自己以前习惯性记录在印象笔记的东西写在博客里，也可能是写一下跟生活有关的文章，但最多的应该还是跟iOS开发相关的学习心得吧~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Hexo的博客搭建 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/05/07/基于Hexo的博客搭建/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="写在前面的话这是我的第一篇博文。其实想自己搭一个博客挺久了，之前一直觉得自己的水平可能还没到可以开技术博客的阶段，但是昨天还是鼓起勇气捣鼓了一个，可能会把自己以前习惯性记录在印象笔记的东西写在博客里，也可能是写一下跟生活有关的文章，但最多的应该还是跟iOS开发相关的学习心得吧~">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/1.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/5.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/3.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/4.png">
+<meta property="og:updated_time" content="2016-05-08T15:15:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Hexo的博客搭建 | Zen3’s blog">
+<meta name="twitter:description" content="写在前面的话这是我的第一篇博文。其实想自己搭一个博客挺久了，之前一直觉得自己的水平可能还没到可以开技术博客的阶段，但是昨天还是鼓起勇气捣鼓了一个，可能会把自己以前习惯性记录在印象笔记的东西写在博客里，也可能是写一下跟生活有关的文章，但最多的应该还是跟iOS开发相关的学习心得吧~">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/1.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">基于Hexo的博客搭建</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-05-07" class="post-meta__date date">2016-05-07</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/我的第一篇博文/">我的第一篇博文</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h3 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h3><pre><code>这是我的第一篇博文。其实想自己搭一个博客挺久了，之前一直觉得自己的水平可能还没到可以开技术博客的阶段，但是昨天还是鼓起勇气捣鼓了一个，可能会把自己以前习惯性记录在印象笔记的东西写在博客里，也可能是写一下跟生活有关的文章，但最多的应该还是跟iOS开发相关的学习心得吧~
+</code></pre><a id="more"></a>
+<h1 id="在OS-X系统下搭建自己的博客"><a href="#在OS-X系统下搭建自己的博客" class="headerlink" title="在OS X系统下搭建自己的博客"></a>在OS X系统下搭建自己的博客</h1><p>&#160; &#160; &#160; &#160;经常在看很多大神有自己的技术博客（下图是喵神的首页）在向别人分享自己的见解，其实现在像简书等也能给我们提供一个很好的平台。但是个人博客显然更有逼格，<strong>人不装逼和咸鱼有什么区别！</strong>当然，个人博客的优点不仅如此，它不依赖第三方的管理，而且有点前端基础的还可以自己进行设计。</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/1.png" alt="喵神的首页"></p>
+<p><strong>注：</strong>本文主要针对OS X ，Windows 除了软件安装方式和命令有些区别（装了git bash也一样），其他基本一样。</p>
+<h2 id="一切的基础–Hexo"><a href="#一切的基础–Hexo" class="headerlink" title="一切的基础–Hexo"></a>一切的基础–Hexo</h2><h3 id="什么是Hexo"><a href="#什么是Hexo" class="headerlink" title="什么是Hexo"></a>什么是Hexo</h3><blockquote>
+<p>Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 Markdown（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。</p>
+</blockquote>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="安装前提"><a href="#安装前提" class="headerlink" title="安装前提"></a>安装前提</h4><p>安装 Hexo 不是很困难。然而在安装前，您必须检查电脑中是否已安装下列应用程序：</p>
+<ul>
+<li><p><a href="https://nodejs.org/en/" title="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a></p>
+</li>
+<li><p><a href="https://git-scm.com" title="https://git-scm.com" target="_blank" rel="external">Git</a></p>
+</li>
+</ul>
+<p>Git 的话应该是coder必备了吧？Node.js 很多做前端的童鞋也是有的：都没有？也木有关系，你，还有我！</p>
+<h4 id="安装-Git"><a href="#安装-Git" class="headerlink" title="安装 Git"></a>安装 Git</h4><p>Mac：使用 <a href="https://http://brew.sh" title="https://http://brew.sh" target="_blank" rel="external">Homebrew</a>, <a href="https://www.macports.org" title="https://www.macports.org" target="_blank" rel="external">MacPorts</a> 或下载 <a href="https://sourceforge.net/projects/git-osx-installer/" title="https://sourceforge.net/projects/git-osx-installer/" target="_blank" rel="external">安装程序</a> 安装。</p>
+<p>如果之前是在官网下载的 node 安装包，运行后会自动安装在全局目录，其中node 命令在 /usr/local/bin/node ，npm 命令在全局 node_modules 目录中，具体路径为 /usr/local/lib/node_modules/npm</p>
+<h4 id="安装-Node-js"><a href="#安装-Node-js" class="headerlink" title="安装 Node.js"></a>安装 Node.js</h4><p>利用 nvm 来安装 Node.js ，nvm 是 Mac 下的 node 管理工具，有点类似管理 Ruby 的 rvm。</p>
+<p>1.卸载已安装到全局的 node/npm<br>&#160; &#160; &#160; &#160;如果之前是在官网下载的 node 安装包，运行后会自动安装在全局目录，其中node 命令在 /usr/local/bin/node ，npm 命令在全局 node_modules 目录中，具体路径为 /usr/local/lib/node_modules/npm</p>
+<p>安装 nvm 之后最好先删除下已安装的 node 和全局 node 模块：</p>
+<pre><code>$ npm ls -g --depth=0 
+#查看已经安装在全局的模块，以便删除这些全局模块后再按照不同的 node 版本重新进行全局安装 
+
+$ sudo rm -rf /usr/local/lib/node_modules #删除全局 node_modules 目录 sudo rm /usr/local/bin/node 
+#删除 node 
+
+$ cd /usr/local/bin &amp;&amp; ls -l | grep &quot;../lib/node_modules/&quot; | awk &apos;{print $9}&apos;| xargs rm 
+#删除全局 node 模块注册的软链
+</code></pre><p>2.安装 nvm</p>
+<p>cURL:</p>
+<pre><code>$ curl https://raw.github.com/creationix/nvm/master/install.sh | sh
+</code></pre><p>Wget:</p>
+<pre><code>$ wget -qO- https://raw.github.com/creationix/nvm/master/install.sh | sh
+</code></pre><p>安装完成后，<strong>重启终端</strong>并执行下列命令即可安装 Node.js。</p>
+<pre><code>$ nvm install 4
+</code></pre><p>3.安装切换各版本 node/npm</p>
+<pre><code>$ nvm install stable 
+#安装最新稳定版 node，现在是 5.0.0 
+
+$ nvm install 4.2.2 
+#安装 4.2.2 版本 
+
+$nvm install 0.12.7 
+#安装 0.12.7 版本 
+
+# 特别说明：以下模块安装仅供演示说明，并非必须安装模块 
+$ nvm use 0 
+#切换至 0.12.7 版本 
+
+$ npm install -g mz-fis 
+#安装 mz-fis 模块至全局目录，安装完成的路径是 /Users/&lt;你的用户名&gt;/.nvm/versions/node/v0.12.7/lib/mz-fis 
+
+$ nvm use 4
+#切换至 4.2.2 版本 
+
+$ npm install -g react-native-cli 
+#安装 react-native-cli 模块至全局目录，安装完成的路径是 /Users/&lt;你的用户名&gt;/.nvm/versions/node/v4.2.2/lib/react-native-cli 
+
+$ nvm alias default 0.12.7 
+#设置默认 node 版本为 0.12.7
+</code></pre><p> 这里说一下，我在安装时碰到的一个小问题：</p>
+<p> 当开启一个新的 shell 窗口时，找不到 node 命令的情况。<br> 这种情况一般来自两个原因</p>
+<p>一、shell 不知道 nvm 的存在</p>
+<p>二、nvm 已经存在，但是没有 default 的 Node.js 版本可用。</p>
+<p> 对应解决方式：</p>
+<p>一、检查 ~/.profile 或者 ~/.bash_profile 中有没有这样两句</p>
+<pre><code>normalexport NVM_DIR=&quot;/Users/YOURUSERNAME/.nvm&quot;
+
+[ -s &quot;$NVM_DIR/nvm.sh&quot; ] &amp;&amp; . &quot;$NVM_DIR/nvm.sh&quot;  # This loads nvm
+normal
+</code></pre><p>没有的话，加进去。</p>
+<p>这两句会在 bash 启动的时候被调用，然后注册 nvm 命令。</p>
+<p>二、调用</p>
+<pre><code>$ nvm ls
+#检查nvm default 的指向。
+</code></pre><p>如果没有的话，执行</p>
+<pre><code>$ nvm alias default 0.12 
+#告诉 nvm 你要使用 0.12.x 版本（当然也可以是其他的）
+</code></pre><h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a>安装 Hexo</h3><p>所有必备的应用程序安装完成后，即可使用 npm 安装 Hexo。</p>
+<pre><code>$ npm install -g hexo-cli
+</code></pre><h3 id="Hexo-的配置及使用"><a href="#Hexo-的配置及使用" class="headerlink" title="Hexo 的配置及使用"></a>Hexo 的配置及使用</h3><p>安装 Hexo 完成后，执行下列命令，Hexo 将会在指定文件夹中新建所需要的文件。</p>
+<pre><code>$ hexo init &lt;folder&gt;
+$ cd &lt;folder&gt;
+$ npm install
+</code></pre><p>新建完成后，指定文件夹的目录如下：<br>.</p>
+<pre><code>├── _config.yml
+
+├── package.json
+
+├── scaffolds
+
+├── source
+
+|     ├── _drafts
+
+|    └── _posts
+
+└── themes
+</code></pre><blockquote>
+<ul>
+<li>scaffolds 工具模板</li>
+<li>scripts hexo的功能js</li>
+<li>source 博客資源文件夾</li>
+<li>source/_drafts 草稿文件夾</li>
+<li>source/_posts 文章文件夾</li>
+<li>themes 存放皮膚的文件夾</li>
+<li>themes/landscape 默認皮膚文件夾</li>
+<li>_config.yml 全局配置文件</li>
+<li>db.json json格式的靜態常量數據庫</li>
+<li>_posts目錄：Hexo存放博客文章的文件夾</li>
+<li>themes目錄：存放皮膚的文件夾，默認使用官方的主題 你也可以從hexo主題頁面下載你喜歡的主題</li>
+</ul>
+</blockquote>
+<h4 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h4><p>打开文件位置_config.yml修改几个键值对，下面把几个必须设置的列出来按需求修改，<strong>记得保存</strong>， <strong>还有注意配置的键值之间一定要有空格</strong>。</p>
+<pre><code>title:    网站标题
+subtitle:    网站副标题
+description:     网站描述
+author:    您的名字
+language:    网站使用的语言  如使用中文，则：zh-Hans
+timezone:    网站时区。Hexo 默认使用您电脑的时区。时区列表。比如说：America/New_York, Japan, 和 UTC 。
+</code></pre><p>和人靠衣装是一个道理，<strong>主题</strong> 对博客来说也是很重要的，兴趣的童鞋可以去研究一下怎么设计一款自己的专属主题，但如果像我一样，想装逼又有点懒的话，这里给大家一些链接，可以参考一下：</p>
+<p><a href="https://www.zhihu.com/question/24422335" target="_blank" rel="external">知乎上大家推荐得比较多的主题</a></p>
+<p><a href="https://hexo.io/themes/" target="_blank" rel="external">主流的 hexo 博客主题</a></p>
+<p>顺带提一下主题的安装方法，一般别人的 github 上也会说得很清楚。比如呢，我要配置一款叫 next 的主题，我只需要做到下面的三步：</p>
+<pre><code>1. $ cd &lt;folder&gt; #进入刚刚生成的目录
+
+2.$ git clone https://github.com/iissnan/hexo-theme-next themes/next
+
+3. 打开 _config.yml 文件，找到 **theme** 键值
+
+    theme: next   //刚刚安装的主题名称
+</code></pre><h4 id="写一篇博客"><a href="#写一篇博客" class="headerlink" title="写一篇博客"></a>写一篇博客</h4><p>Hexo使用<strong>markdown</strong>语法的纯文本存放文章 后缀为<strong>.md</strong> 你可以在_post文件夹里面新建这个后缀的.md文件 使用的全是UTF-8编码；当然也可以使用bash命令行：</p>
+<pre><code>$ hexo new &lt;title&gt;
+</code></pre><p>看一下所生成的 <strong>.md</strong> 文件：</p>
+<pre><code>title: title #文章标题
+date: 2015-02-05 12:47:44 #文章生成时间
+categories: #文章分类目录 可以省略
+tags: #文章标签 可以省略
+description: #你对本页的描述 可以省略
+---
+这里开始使用markdown格式输入你的正文。
+</code></pre><p>多标签注意语法格式 如下:</p>
+<pre><code>tags:
+- 标签1
+- 标签2
+- 标签3
+- etc...
+</code></pre><p>想在首页文章预览添加图片可以添加photo参数 这个fancybox可以省略 如下:</p>
+<pre><code>photos:
+- http://xxx.com/photo.jpg
+</code></pre><p>正文中可以使用 <strong>\&lt;!–more–></strong> 设置文章摘要 如下:</p>
+<pre><code>以上是文章摘要
+&lt;!--more--&gt;
+以下是余下全文
+</code></pre><p>more以上内容即是文章摘要，在主页显示，more以下内容点击『&gt; Read More』链接打开全文才显示。</p>
+<p>对于 <strong>markdown</strong> 的书写语法可以查看一下链接：<br><a href="http://www.appinn.com/markdown/" target="_blank" rel="external">markdown</a></p>
+<p>自己再写一篇练练手基本就可以掌握了。</p>
+<p>而在mac机子下面来写博客，推荐 [<strong>Mou</strong>][mouUrl] 这个软件， 可以一边打一边看效果，类似检查语法错误~</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/5.png" alt="mou"></p>
+<p>而博客里的图片，我个人是 先用 <a href="https://tinypng.com" target="_blank" rel="external">TinyPNG</a> 压缩过之后上传到 阿里云OSS 生成链接以供使用。</p>
+<h2 id="部署你的博客到-Github"><a href="#部署你的博客到-Github" class="headerlink" title="部署你的博客到 Github"></a>部署你的博客到 Github</h2><h3 id="创建-Github-域名和空间"><a href="#创建-Github-域名和空间" class="headerlink" title="创建 Github 域名和空间"></a>创建 Github 域名和空间</h3><p>Hexo 一般是是推荐部署在 github 或者 gitcafe 上的，所以下面是部署到 github 的方法：</p>
+<h4 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h4><p>这一步可能是给非程序员的童鞋，首先你需要注册一个 <a href="https://github.com" title="https://github.com" target="_blank" rel="external">Github账号</a>，已有的可以会直接看一下下一步创建仓库，注意username，这会影响到你的域名，你的域名将会是 username.github.io ，所以当和亲生儿子取名字一样慎重吧~</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/2.png" alt="githubJion"></p>
+<h4 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h4><p>然后需要创建一个仓库(repository) 来存储我们的网站，点击首页<strong>“+”</strong>按钮下的 <strong>New repository</strong> 按钮创建仓库, Respository name 中的 username.github.io 的 <strong>username</strong> 一定与前面的 Owner 一致，记住你的username下面会用到。</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/3.png" alt="githubrepository"></p>
+<h3 id="修改-config-yml-文件"><a href="#修改-config-yml-文件" class="headerlink" title="修改 _config.yml 文件"></a>修改 _config.yml 文件</h3><pre><code>deploy:
+    type: git    //使用Git 发布
+    repo: https://github.com/username/username.github.io.git    // 刚创建的Github仓库
+</code></pre><p>###测试</p>
+<p>命令行输入：</p>
+<pre><code>$ hexo s
+</code></pre><p>就可以启动本地服务器测试了：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E5%BF%83%E5%BE%97/4.png" alt="Zen3"></p>
+<p>这个时 hexo 启动 localhost 的4000 端口 静态的网站架设完成。</p>
+<p>###部署</p>
+<p>命令行输入：</p>
+<pre><code>$ hexo clean #清除缓存
+$ hexo g #生成静态网页
+$ hexo d #开始部署
+</code></pre><p>如果这是你的第一次，终端会让你输入Github 的邮箱和密码，正确输入后，骚等片刻，就会把你的博客上传至Github 了。以后在每次把博客写完后，执行一下这个命令就可以直接发布了。</p>
+<p>##完成<br>哈哈哈哈哈~到这一步基本就是成功了！赶紧打开浏览器输入“<a href="http://username.github.io”，看看属于你自己的博客吧！" target="_blank" rel="external">http://username.github.io”，看看属于你自己的博客吧！</a></p>
+<p>这只是一个快速而又基础的教程，要知道更多更好玩的东东，还是移步到 <a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="external">Hexo官网</a> 吧！</p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
