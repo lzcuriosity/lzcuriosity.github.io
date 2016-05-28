@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      关于iOS9的CoreSpotlight | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="摘要最近在做项目的时候，刚好有一个需求是要用到iOS9所支持的一个新特性—-CoreSpotlight 来实现，所以简单记录一下CoreSpotlight 的使用方法啦啦啦~~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于iOS9的CoreSpotlight | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/05/28/关于iOS9的CoreSpotlight/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="摘要最近在做项目的时候，刚好有一个需求是要用到iOS9所支持的一个新特性—-CoreSpotlight 来实现，所以简单记录一下CoreSpotlight 的使用方法啦啦啦~~">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/show.PNG">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/framework.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/%E6%9C%BA%E5%99%A8%E4%BA%BA.png">
+<meta property="og:updated_time" content="2016-05-28T12:00:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于iOS9的CoreSpotlight | Zen3’s blog">
+<meta name="twitter:description" content="摘要最近在做项目的时候，刚好有一个需求是要用到iOS9所支持的一个新特性—-CoreSpotlight 来实现，所以简单记录一下CoreSpotlight 的使用方法啦啦啦~~">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/show.PNG">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">关于iOS9的CoreSpotlight</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-05-28" class="post-meta__date date">2016-05-28</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/CoreSpotlight/">CoreSpotlight</a>, <a class="tags-link" href="/tags/iOS9/">iOS9</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>最近在做项目的时候，刚好有一个需求是要用到iOS9所支持的一个新特性—-CoreSpotlight 来实现，所以简单记录一下CoreSpotlight 的使用方法啦啦啦~~<br><a id="more"></a></p>
+<h2 id="什么是-Spotlight"><a href="#什么是-Spotlight" class="headerlink" title="什么是 Spotlight"></a>什么是 Spotlight</h2><p>可能大家的 iPhone 或者 iPad 在更新了iOS9 之后就会发现，在主屏幕下滑，或者最左边屏幕最右滑时，可以对整个手机里的内容进行搜索。像下面这样：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/show.PNG" alt=""></p>
+<p>iOS9 中支持为 app 中的内容做索引以支持 spotlight 搜索，并且<strong>这些索引是存在本地设备中的，不会同步到icoloud中，更换了设备就没有了</strong>。</p>
+<p>那我们需要在我们的代码里边做怎么样的支持才能让我们的 app 像微博、知乎一样支持 spotlight 对我们的内容进行搜索呢？</p>
+<h2 id="Spotlight-使用"><a href="#Spotlight-使用" class="headerlink" title="Spotlight 使用"></a>Spotlight 使用</h2><h3 id="使用前提"><a href="#使用前提" class="headerlink" title="使用前提"></a>使用前提</h3><h4 id="framework的导入"><a href="#framework的导入" class="headerlink" title="framework的导入"></a>framework的导入</h4><p>使用 Spotlight 的前提是要在项目里面导入以下两个库：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/framework.png" alt=""></p>
+<h4 id="头文件的导入"><a href="#头文件的导入" class="headerlink" title="头文件的导入"></a>头文件的导入</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;CoreSpotlight/CoreSpotlight.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;MobileCoreServices/MobileCoreServices.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>前面也说过，Spotlight 只支持 iOS9以上版本，所以如果<strong>要适配 iOS9 以下的版本，记得一定要做好版本的判断语句，不管是在导入头文件的时候还是调用API的时候</strong>。如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#if __IPHONE_OS_VERSION_MAX_ALLOWED &gt;= 90000</span><span class="comment">//code...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#endif</span></span><br></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>用豆瓣电影列表为例子，demo 可让我们在 Spotlight 里面根据电影的 <strong>分类</strong> 来搜索到我们对应的电影~</p>
+<h4 id="定义内容类"><a href="#定义内容类" class="headerlink" title="定义内容类"></a>定义内容类</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CSSearchableItemAttributeSet *attributeSet = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:(<span class="built_in">NSString</span> *)kUTTypeImage];</span><br><span class="line"></span><br><span class="line">attributeSet.title = temp[<span class="string">@"tittle"</span>];                <span class="comment">// 标题</span></span><br><span class="line">attributeSet.keywords = [temp[<span class="string">@"category"</span>] componentsSeparatedByString:<span class="string">@"/"</span>];                  <span class="comment">// 关键字,NSArray格式</span></span><br><span class="line">attributeSet.contentDescription = temp[<span class="string">@"description"</span>];    <span class="comment">// 描述</span></span><br><span class="line">attributeSet.thumbnailData = <span class="built_in">UIImagePNGRepresentation</span>([<span class="built_in">UIImage</span> imageNamed:temp[<span class="string">@"image"</span>]]);        <span class="comment">// 图标, NSData格式</span></span><br></pre></td></tr></table></figure>
+<p>CSSearchableItemAttributeSet 是一个提供给 Spotlight 搜索的内容类，我们可以设置它的各种属性，用户通过 Spotlight 搜索得到的内容样式就是由它控制的；temp 是定义了一部movie基本信息的 NSDictionary.</p>
+<h4 id="内容类添加到索引（可供搜索类）"><a href="#内容类添加到索引（可供搜索类）" class="headerlink" title="内容类添加到索引（可供搜索类）"></a>内容类添加到索引（可供搜索类）</h4><p>想供 Spotlight 搜索得到我们的数据模型，还需要将内容类添加到可供搜索的类 CSSearchableItem 。如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CSSearchableItem *item = [[CSSearchableItem alloc] initWithUniqueIdentifier:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%d"</span>,i] domainIdentifier:<span class="string">@"Zen3.CoreSpotlightDemo"</span> attributeSet:attributeSet];</span><br></pre></td></tr></table></figure>
+<p>其中，</p>
+<p>UniqueIdentifier:(nullable NSString *) 是唯一标识识别是这个索引数据的，可以理解为标识符，后面可以用于判断用户点击 Spotlight 的搜索结果，是从哪一个电影索引跳入 appDemo 的。</p>
+<p>domainIdentifier:(nullable NSString *) 是确定这个索引数据是属于哪个“范围”的，这个范围可以用来区别不同 app 的索引数据，也可以用于区别同一个app里面不同模块的索引数据。</p>
+<p>attributeSet:(CSSearchableItemAttributeSet *) 就是我们刚刚上面定义的。</p>
+<h4 id="封装索引为数组并添加"><a href="#封装索引为数组并添加" class="headerlink" title="封装索引为数组并添加"></a>封装索引为数组并添加</h4><p>将可供搜索类 CSSearchableItem 全部添加到一个<strong>数组</strong>（NSMutableArray）里面。<br>将包含所有索引（可供搜索类）的数组，通过以下方法提交：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[[CSSearchableIndex defaultSearchableIndex] indexSearchableItems:seachableItems completionHandler:^(<span class="built_in">NSError</span> * error) &#123;</span><br><span class="line">	<span class="keyword">if</span> (error) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"indexSearchableItems Error:%@"</span>,error.localizedDescription);</span><br><span class="line">            </span><br><span class="line">	&#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>完成了以上几步，你就可以通过 keyword 来搜索到你的 内容类了。那如果你想点击不同搜索结果，比如电影，进入app里面会跳转到不同的页面，你还需要做下面的事情。</p>
+<h4 id="不同索引不同跳转"><a href="#不同索引不同跳转" class="headerlink" title="不同索引不同跳转"></a>不同索引不同跳转</h4><p>搜索得到结果后页面的跳转实现，主要是在 <strong>AppDelegate.m</strong> 里定义的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application continueUserActivity:(<span class="built_in">NSUserActivity</span> *)userActivity restorationHandler:(<span class="keyword">void</span> (^)(<span class="built_in">NSArray</span> * _Nullable))restorationHandler</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span>* idetifier = userActivity.userInfo[<span class="string">@"kCSSearchableItemActivityIdentifier"</span>];        <span class="comment">//获取传入的索引数据的唯一标识</span></span><br><span class="line">    </span><br><span class="line">    MovieDetailPage* detailPage = [[MovieDetailPage alloc] init];</span><br><span class="line">    detailPage.numberOfMovie = [idetifier intValue];</span><br><span class="line">    <span class="built_in">UINavigationController</span> *navigationController = (<span class="built_in">UINavigationController</span> *)<span class="keyword">self</span>.window.rootViewController;</span><br><span class="line">    [navigationController pushViewController: detailPage animated:<span class="literal">true</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="删除索引条目"><a href="#删除索引条目" class="headerlink" title="删除索引条目"></a>删除索引条目</h4><p>关于删除索引，上文也有提起过，我们上面所做的添加提交索引操作都是在设备本地的，所以删除也是如此，有以下三种方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)deleteSearchableItemsWithIdentifiers:(<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)identifiers completionHandler:(<span class="keyword">void</span> (^ __nullable)(<span class="built_in">NSError</span> * __nullable error))completionHandler; -(<span class="keyword">void</span>)deleteSearchableItemsWithDomainIdentifiers:(<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)domainIdentifiers completionHandler:(<span class="keyword">void</span> (^ __nullable)(<span class="built_in">NSError</span> * __nullable error))completionHandler;- (<span class="keyword">void</span>)deleteAllSearchableItemsWithCompletionHandler:(<span class="keyword">void</span> (^ __nullable)(<span class="built_in">NSError</span> * __nullable error))completionHandler;</span><br></pre></td></tr></table></figure>
+<p>分别是根据identifier来删除，根据domain来删除以及删除所有的索引。</p>
+<p>维护好app里面所定义提交的索引是开发者的职责，对于已经失效，或者弃用的索引，一定要及时删除，避免造成不好的用户体验。</p>
+<p>暂时还有没有找到关于索引更新的API,知道的童鞋可以赐教一下~所以我目前对索引的更新就是使用删除旧的，添加新的的方式。</p>
+<h3 id="一点我遇到的坑"><a href="#一点我遇到的坑" class="headerlink" title="一点我遇到的坑"></a>一点我遇到的坑</h3><p>如果用虚拟机进行调试的话，如果遇到 indexSearchableItems 提交没有报错却搜索不到，可以重启一下虚拟机；如果更改了domainIdentifier或者UniqueIdentifier的传入值，而log出来的结果还是一样，可以尝试先删除所有之后，再次重启虚拟机试一试。</p>
+<h2 id="我的demo"><a href="#我的demo" class="headerlink" title="我的demo"></a>我的demo</h2><p>附上我的demo地址：<a href="https://github.com/lzcuriosity/CoreSpotlightDemo" target="_blank" rel="external">lzcuriosity/CoreSpotlightDemo</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>今晚写完这篇博客，我就要出现在召唤师峡谷了啦~~哈哈哈~希望今晚能一直连胜！我准备祭出我的神级机器人了！再见~<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/CoreSpotlight%E7%9A%84%E4%BD%BF%E7%94%A8/%E6%9C%BA%E5%99%A8%E4%BA%BA.png" alt=""></p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
