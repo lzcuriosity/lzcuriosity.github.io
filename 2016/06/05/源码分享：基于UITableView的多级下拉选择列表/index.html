@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      源码分享：基于UITableView的多级下拉选择列表 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="摘要给大家分享一个自己写的基于UITableView的多级下拉选择列表（树形选择列表），支持到4级拓展，可多选、单选。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分享：基于UITableView的多级下拉选择列表 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/06/05/源码分享：基于UITableView的多级下拉选择列表/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="摘要给大家分享一个自己写的基于UITableView的多级下拉选择列表（树形选择列表），支持到4级拓展，可多选、单选。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%9F%BA%E4%BA%8EUITableView%E7%9A%84%E5%A4%9A%E7%BA%A7%E4%B8%8B%E6%8B%89%E9%80%89%E6%8B%A9%E5%88%97%E8%A1%A8/show.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%9F%BA%E4%BA%8EUITableView%E7%9A%84%E5%A4%9A%E7%BA%A7%E4%B8%8B%E6%8B%89%E9%80%89%E6%8B%A9%E5%88%97%E8%A1%A8/data.png">
+<meta property="og:updated_time" content="2016-06-05T09:25:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码分享：基于UITableView的多级下拉选择列表 | Zen3’s blog">
+<meta name="twitter:description" content="摘要给大家分享一个自己写的基于UITableView的多级下拉选择列表（树形选择列表），支持到4级拓展，可多选、单选。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%9F%BA%E4%BA%8EUITableView%E7%9A%84%E5%A4%9A%E7%BA%A7%E4%B8%8B%E6%8B%89%E9%80%89%E6%8B%A9%E5%88%97%E8%A1%A8/show.gif">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">源码分享：基于UITableView的多级下拉选择列表</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-06-05" class="post-meta__date date">2016-06-05</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/Tableview/">Tableview</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/源码分享/">源码分享</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>给大家分享一个自己写的基于UITableView的多级下拉选择列表（树形选择列表），支持到4级拓展，可多选、单选。<br><a id="more"></a></p>
+<h2 id="先上效果图吧"><a href="#先上效果图吧" class="headerlink" title="先上效果图吧"></a>先上效果图吧</h2><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%9F%BA%E4%BA%8EUITableView%E7%9A%84%E5%A4%9A%E7%BA%A7%E4%B8%8B%E6%8B%89%E9%80%89%E6%8B%A9%E5%88%97%E8%A1%A8/show.gif" alt=""></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="导入头文件"><a href="#导入头文件" class="headerlink" title="导入头文件"></a>导入头文件</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import<span class="meta-string">"Header.h"</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="导入数据的格式要求"><a href="#导入数据的格式要求" class="headerlink" title="导入数据的格式要求"></a>导入数据的格式要求</h3><p>像上面的电影分类的数据格式如下:</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%9F%BA%E4%BA%8EUITableView%E7%9A%84%E5%A4%9A%E7%BA%A7%E4%B8%8B%E6%8B%89%E9%80%89%E6%8B%A9%E5%88%97%E8%A1%A8/data.png" alt=""></p>
+<p>所有的电影以树形的格式存储，本质是一个 <strong>NSArray</strong>.</p>
+<p><strong>NSArray</strong> 里的每一个对象都是一个 <strong>NSDictionary</strong>.</p>
+<p> 每个 <strong>NSDictionary</strong> 都包含以下3个对象：</p>
+<ul>
+<li>key：（NSString *）id （每一个分类的唯一标识符，必须存在）</li>
+<li>key：（NSString *）name （分类的名称）</li>
+<li>key：（NSArray <em>）subCategory （分类的子类数组，它的数据和上面的 <em>*NSArray</em></em> 相同，也就是循环嵌套来实现子类也有自己的子类）</li>
+</ul>
+<p>可以想我在Demo里一样，将电影的数据先存为 <strong>.plist</strong> 文件。也可以手动代码去生成。</p>
+<h3 id="生成下拉列表"><a href="#生成下拉列表" class="headerlink" title="生成下拉列表"></a>生成下拉列表</h3><p>详细代码见demo</p>
+<h4 id="单选"><a href="#单选" class="headerlink" title="单选"></a>单选</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TreeSelectTableViewController *singleSelecteTableView;</span><br><span class="line">   TreeDataSource *data1;   </span><br><span class="line">   data1 = [[TreeDataSource alloc] initWithArray:dataSource SelectCategory:selectedCateArray1];</span><br><span class="line">   singleSelecteTableView = [[TreeSelectTableViewController alloc] initWithTreeDataSource:data1 IsSingleSelect:<span class="literal">YES</span> ResultBlock:^(<span class="built_in">NSArray</span> *arrResult&#123;			<span class="comment">//处理回调的选择结果arrResult</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
+<h4 id="多选"><a href="#多选" class="headerlink" title="多选"></a>多选</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TreeSelectTableViewController *multiSelectTableView;</span><br><span class="line">   TreeDataSource *data2;</span><br><span class="line">   </span><br><span class="line">   data2 = [[TreeDataSource alloc] initWithArray:dataSource SelectCategory:selectedCateArray2];</span><br><span class="line">   data2.chooseCount = <span class="number">3</span>;</span><br><span class="line">   multiSelectTableView  = [[TreeSelectTableViewController alloc] initWithTreeDataSource:data2 IsSingleSelect:<span class="literal">NO</span> ResultBlock:^(<span class="built_in">NSArray</span> *arrResult)&#123;</span><br><span class="line">       <span class="comment">//处理回调的选择结果arrResult</span></span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
+<h3 id="关于样式的修改"><a href="#关于样式的修改" class="headerlink" title="关于样式的修改"></a>关于样式的修改</h3><ul>
+<li>目前版本不支持修改 cell 的 height ，如果需要改动可能需要自己修改源码。</li>
+<li>在 image 目录下，可以自行替换图标。</li>
+<li>关于数据源关键字的修改可以直接在 <strong>PrefixHeader.pch</strong> 文件下替换。</li>
+</ul>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><p>model 目录下的 TreeDataSource 是做主要的数据操作。</p>
+<p>controlller 目录下的 TreeSelectTableViewController 是根据 TreeDataSource 来控制列表控件。</p>
+<p>目前可支持到4级目录的下拉，如果想支持多于4级的列表的，请找到 TreeDataSource.m 文件下的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归获取类别id</span></span><br><span class="line">-(<span class="built_in">NSString</span> *)getCateId:(<span class="built_in">NSArray</span> *)arrSub Rows:(<span class="built_in">NSInteger</span> )row;</span><br></pre></td></tr></table></figure>
+<p>再做添加。</p>
+<p>更详细的函数说明，变量说明，我都写在代码注释里面啦啦啦啦~~</p>
+<h2 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h2><p>这里面的 <strong>TreeSelectTableView</strong> 文件是需要导入的SDK; <strong>TreeSelectTableViewDemo</strong> 是上面我写的使用演示demo。</p>
+<p><a href="https://github.com/lzcuriosity/TreeSelectTableView" target="_blank" rel="external">github链接</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>哈哈，在这样一个下雨天，分享了自己第一个源码，十分有气氛啊~以前自己也写了挺多像这样比较实用的自定义控件的，以后如果有机会都会开源的~代码有什么地方可以改进，欢迎提意见~</p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
