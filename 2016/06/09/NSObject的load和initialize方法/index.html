@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      NSObject的load和initialize方法 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言今天的在项目里面做版本兼容的时候，需要利用 runtime 做 Method Swizzling，一开始把 Method Swizzling 代码写在了 + (void)initialize中，后来发现了这种做法是不对的。感觉很有必要深入了解关于 NSObject的load和initialize方法。所以才有了这一篇博客。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NSObject的load和initialize方法 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/06/09/NSObject的load和initialize方法/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言今天的在项目里面做版本兼容的时候，需要利用 runtime 做 Method Swizzling，一开始把 Method Swizzling 代码写在了 + (void)initialize中，后来发现了这种做法是不对的。感觉很有必要深入了解关于 NSObject的load和initialize方法。所以才有了这一篇博客。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/load.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/initializes.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/1.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/3.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/4.png">
+<meta property="og:updated_time" content="2016-06-09T07:55:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NSObject的load和initialize方法 | Zen3’s blog">
+<meta name="twitter:description" content="前言今天的在项目里面做版本兼容的时候，需要利用 runtime 做 Method Swizzling，一开始把 Method Swizzling 代码写在了 + (void)initialize中，后来发现了这种做法是不对的。感觉很有必要深入了解关于 NSObject的load和initialize方法。所以才有了这一篇博客。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/load.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">NSObject的load和initialize方法</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-06-09" class="post-meta__date date">2016-06-09</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/NSObject/">NSObject</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/objective-C/">objective - C</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天的在项目里面做版本兼容的时候，需要利用 runtime 做 Method Swizzling，一开始把 Method Swizzling 代码写在了 + (void)initialize中，后来发现了这种做法是不对的。感觉很有必要深入了解关于 NSObject的load和initialize方法。所以才有了这一篇博客。</p>
+<a id="more"></a>
+<h2 id="load-与-initialize"><a href="#load-与-initialize" class="headerlink" title="load 与 initialize"></a>load 与 initialize</h2><p>OC 是一门面向对象的动态语言，它的类被加载和初始化的时候，可以收到方法回调，可以在适当的情况下做一些定制处理。而这正是load和initialize方法可以帮我们做到的。在我们理解这两个方法之前，先来看看官方的文档是怎么说的吧~</p>
+<p><code>load</code></p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/load.png" alt=""></p>
+<p><code>initialize</code></p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/initializes.png" alt=""></p>
+<p>我从官方文档中总结如下：</p>
+<p><code>load</code></p>
+<p>在iOS上通常就是App启动时，load 方法是只要类所在文件被引用就会被调用 一个类的 load方法不用写明[super load]，父类就会收到调用。且 <strong>父类(Superclass)的方法优先于子类(Subclass)的方法，类中的方法优先于类别(Category)中的方法。</strong> 对于一个类而言，没有 load 方法实现就不会调用，不会考虑对 NSObject 的继承。</p>
+<p><code>initialize</code></p>
+<p>initialize 是在类或者其子类的第一个方法被调用前调用。initialize 的运行过程中是能保证线程安全的。和 load 不同，即使子类不实现 initialize 方法，会把父类的实现继承过来调用一遍。注意的是在此之前，父类的方法已经被执行过一次了，同样不需要 super 调用。</p>
+<h2 id="代码示例验证"><a href="#代码示例验证" class="headerlink" title="代码示例验证"></a>代码示例验证</h2><p><strong>代码1：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//父类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SuperClass</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//子类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ChildClass</span> : <span class="title">SuperClass</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//父类的分类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SuperClass</span> (<span class="title">SuperClassCategory</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//子类的分类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ChildClass</span> (<span class="title">ChildClassCategory</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//实现</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SuperClass</span></span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ChildClass</span></span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SuperClass</span> (<span class="title">SuperClassCategory</span>)</span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ChildClass</span> (<span class="title">ChildClassCategory</span>)</span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/1.png" alt=""></p>
+<p>在上面的代码方法 <code>- (void)viewDidLoad</code> 里添加：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[SuperClass alloc] init];</span><br><span class="line">[[ChildClass alloc] init];</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/2.png" alt=""></p>
+<p>这个结果最基本的验证了官方文档所说的内容。</p>
+<p><strong>代码2：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//A类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AClass</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//A类的分类1</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AClass</span> (<span class="title">AClassCategory1</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//A类的分类2</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AClass</span> (<span class="title">AClassCategory2</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//实现</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AClass</span></span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AClass</span> (<span class="title">AClassCategory1</span>)</span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AClass</span> (<span class="title">AClassCategory2</span>)</span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [[AClass alloc] init];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/3.png" alt=""></p>
+<p>只有最后一个类别(Category)的+(void)initialize执行，其他两个都被隐藏。而对于+(void)load，三个都执行，并且如果Apple的文档中介绍顺序一样：先执行类自身的实现，再执行类别(Category)中的实现。</p>
+<p><strong>代码3：</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//父类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SuperClass</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//子类</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ChildClass</span> : <span class="title">SuperClass</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//实现</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SuperClass</span></span></span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)load</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(<span class="keyword">void</span>)initialize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%s"</span>, __FUNCTION__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ChildClass</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [[ChildClass alloc] init];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/load_initializes/4.png" alt=""></p>
+<p><strong>为什么会输出两句+[SuperClass initialize]，而+[SuperClass load]只有一句呢？</strong></p>
+<p>原因很简单:</p>
+<p>子类如果没有实现 load 的方法是不会去继承父类的方法实现的。而在子类中并没有关于 load 的定义，所以只输出一句 +[SuperClass load]；</p>
+<p>而 initialize 方法则不一样，子类没有定义 initialize 方法时，会使用父类的 initialize 方法定义。并且我们在第一次调用子类时，会先触发父类的 initialize 方法（第1句+[SuperClass initialize]）。</p>
+<h2 id="一点点补充"><a href="#一点点补充" class="headerlink" title="一点点补充"></a>一点点补充</h2><ul>
+<li><p>load 调用时机比较早，运行环境有不确定因素。具体说来，在iOS上通常就是App启动时进行加载，但当load调用的时候，并不能保证所有类都加载完成且可用，所以在 load 做一些该类方法实现是比较危险的。</p>
+</li>
+<li><p>在 initialize 方法收到调用时，运行环境基本健全。</p>
+</li>
+<li><p>load 是在app载入时调用，所以不能做太多耗时的操作，否则十分影响用户体验。</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>+ (void)load</th>
+<th>+ (void)initialize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>执行时机</td>
+<td>在程序运行后立即执行</td>
+<td>在类的方法第一次被调时执行</td>
+</tr>
+<tr>
+<td>若自身未定义，是否沿用父类的方法？</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>类别中的定义</td>
+<td>全都执行，但后于类中的方法</td>
+<td>覆盖类中的方法，只执行一个</td>
+</tr>
+</tbody>
+</table>
+<h2 id="端午节快乐-！"><a href="#端午节快乐-！" class="headerlink" title="端午节快乐~~！"></a>端午节快乐~~！</h2>
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
