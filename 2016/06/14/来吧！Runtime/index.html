@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      来吧！Runtime~ | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="摘要最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是以一个菜鸟的角度介绍runtime，可能比较好懂吧，哈哈。接下来有空的话，我还会陆续更新一些，我在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="来吧！Runtime~ | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/06/14/来吧！Runtime/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="摘要最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是以一个菜鸟的角度介绍runtime，可能比较好懂吧，哈哈。接下来有空的话，我还会陆续更新一些，我在">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/class.png">
+<meta property="og:updated_time" content="2016-06-13T18:09:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="来吧！Runtime~ | Zen3’s blog">
+<meta name="twitter:description" content="摘要最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是以一个菜鸟的角度介绍runtime，可能比较好懂吧，哈哈。接下来有空的话，我还会陆续更新一些，我在">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">来吧！Runtime~</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-06-14" class="post-meta__date date">2016-06-14</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/Objective-C/">Objective-C</a>, <a class="tags-link" href="/tags/Runtime/">Runtime</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是<strong>以一个菜鸟的角度介绍runtime，可能比较好懂吧</strong>，哈哈。接下来有空的话，我还会陆续更新一些，我在平时项目里面关于runtime 的使用。</p>
+<a id="more"></a>
+<h2 id="Objective-C-Runtime-是什么？"><a href="#Objective-C-Runtime-是什么？" class="headerlink" title="Objective-C Runtime 是什么？"></a>Objective-C Runtime 是什么？</h2><p>Objective-C 是一门<code>动态语言</code>，区别于静态语言，它会把一些决定工作从编译链接推迟到运行时。也就是说，光有编译器的支持还不够，还需要一个<code>运行时系统</code> (runtime system) 来执行编译后的代码。可见，runtime 是 Objective-C 动态性的实现基石。</p>
+<p>究其本质，Objective-C 的 Runtime 是一个<code>运行时库</code>（Runtime Library），它是一个主要使用 C 和汇编写的库（Apple开源了这部分的代码，有兴趣的童鞋可以<a href="http://opensource.apple.com//source/objc4/" target="_blank" rel="external">看看</a>）。这个库主要做一下两件事：</p>
+<ol>
+<li><p>封装C语言的结构体和函数，让开发者在运行时创建、检查或者修改类、对象和方法等等。</p>
+</li>
+<li><p>处理消息，找出方法的最终执行代码。</p>
+</li>
+</ol>
+<p>Objective-C 的 Runtime 铸就了它动态语言的特性，或许 runtime 在平时项目的使用比较少，实用性可能不是特别大，但是却是每个 Objc 程序员需要了解的。</p>
+<h2 id="Runtime-干了些什么？"><a href="#Runtime-干了些什么？" class="headerlink" title="Runtime 干了些什么？"></a>Runtime 干了些什么？</h2><p>我们主动去使用 runtime 可能较少，但是 runtime 却一直处在我们深深的代码里。</p>
+<p>Objective-C 从三种不同的层级上与 Runtime 系统进行交互：</p>
+<ul>
+<li>通过 Objective-C 源代码</li>
+<li>通过 Foundation 框架的 NSObject 类定义的方法</li>
+<li><p>通过对 runtime 函数的直接调用。 </p>
+<p>以上内容还是比较抽象，接下来这个例子就会比较通俗易懂啦，哈哈~<br>在我们平时的代码里，经常会有</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//zen 是类 boy 的实例</span></span><br><span class="line">[zen playBasketball];</span><br><span class="line"></span><br><span class="line"><span class="comment">//或者是以下的写法</span></span><br><span class="line"><span class="comment">//[zen performSelector:@selector(playBasketball)];</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>zen 是一个实例对象，调用它的 playBasketball 方法。</p>
+<p>在 Objective-C 中，如果我们停留在表层类比我们之前学习的其他语言这样去理解其实也可以。但是，如果我们深入去看这句代码，就会发现里面大有乾坤。</p>
+<p>Objc 中，其实是用<code>发送消息</code>来实现方法的调用的。发送消息是用中括号（[]）把接收者和消息括起来，而直到运行时才会把消息与方法实现绑定。简单的说就是，在编译时并不会实例要调用的函数的准确内存地址。</p>
+<p>在编译时，以上代码转化为 <strong>C语言</strong> 的代码：</p>
+<pre><code>objc_msgSend(zen, @selector(playBasketball));
+</code></pre><p>这便是实现<code>消息发送</code>的关键所在。</p>
+<p>其实编译器会根据情况在<strong>objc_msgSend</strong>, <strong>objc_msgSend_stret</strong>, <strong>objc_msgSendSuper</strong>, 或 <strong>objc_msgSendSuper_stret</strong> 四个方法中选择一个来调用。如果消息是传递给超类，那么会调用名字带有”Super”的函数；如果消息返回值是数据结构而不是简单值时，那么会调用名字带有”stret”的函数。</p>
+<p>上面的代码也就只是向 zen 发送了一个 playBaskerball 的消息。接下来我们来探究一下 Runtime 是如何实现消息发送（方法的调用）的。</p>
+<h3 id="Runtime-的消息发送流程"><a href="#Runtime-的消息发送流程" class="headerlink" title="Runtime 的消息发送流程"></a>Runtime 的消息发送流程</h3><p> 上面也提到，方法的调用（包括实例方法和类方法）实质都是给对象发送消息。</p>
+<p> 以上面的代码为例，流程如下：</p>
+<ol>
+<li><p>编译器会把 <code>[zen playBasketball]</code> 或者 <code>[zen performSelector:@selector(playBasketball)]</code> 转化为 <code>objc_msgSend(zen, SEL)</code>,其中，<strong>SEL</strong> 为 @selector(playBasketball)。</p>
+</li>
+<li><p>检测这个 selector 是不是要忽略的。比如 Mac OS X 开发，有了垃圾回收就不理会 retain, release 这些函数了。</p>
+</li>
+<li><p>检测这个 target（也就是 zen ） 是不是 nil 对象。ObjC 的特性是允许对一个 nil 对象执行任何一个方法不会 Crash，因为会被忽略掉。</p>
+</li>
+<li><p>如果上面两个都过了，那就开始查找这个类收到这个消息(也就是playBasketball)后，最终会执行的方法(称指向该方法的指针为 <code>IMP</code>），先从 boy 的<code>方法缓存列表(cache)</code> 里面找，完了找得到就跳到对应的函数去执行。</p>
+</li>
+<li><p>如果 cache 找不到就找一下 boy 方法分发表（<code>methodList</code>）。</p>
+</li>
+<li><p>如果分发表找不到就到超类的分发表去找，一直找，直到找到NSObject类为止。</p>
+</li>
+<li><p>如果还找不到就要面临以下两种情况了：</p>
+<ul>
+<li>使用 <code>[zen playBasketball]</code> 的方式调用方法``，编译器会在编译阶段帮你做好方法的检索，检索不到会立刻报错。<ul>
+<li>使用 <code>[zen performSelector:@selector(playBasketball)]</code> 的方式调用方法，编译器只会做出提醒，可以进行编译，需要到运行时才能确定对象是否接受指定的消息，开始进入消息的转发了，后面会提到。</li>
+</ul>
+</li>
+</ul>
+<p>有点类似于自己搞不定的东西就丢给别人来搞咯，是不是很精髓？</p>
+</li>
+</ol>
+<h3 id="Runtime-的消息转发流程"><a href="#Runtime-的消息转发流程" class="headerlink" title="Runtime 的消息转发流程"></a>Runtime 的消息转发流程</h3><h4 id="动态解析"><a href="#动态解析" class="headerlink" title="动态解析"></a>动态解析</h4><p>当 Runtime 系统在 Cache 和方法分发表中（包括超类）找不到要执行的方法时，Runtime会调用 <code>resolveInstanceMethod:</code> 或 <code>resolveClassMethod:</code> 来给程序员一次动态添加方法实现的机会。我们需要用 <code>class_addMethod</code> 函数完成向特定类添加特定方法实现的操作：<br>（假设 zen 的 playBasketball 方法尚未实现）</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> playBasketballFunc(<span class="keyword">id</span> <span class="keyword">self</span>, SEL _cmd) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// implementation ....</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">BOOL</span>)resolveInstanceMethod:(SEL)aSEL</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (aSEL == <span class="keyword">@selector</span>(playBasketball)) &#123;</span><br><span class="line">          class_addMethod([<span class="keyword">self</span> class], aSEL, (IMP) playBasketballFunc, <span class="string">"v@:"</span>);</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> resolveInstanceMethod:aSEL];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><p>如果以上方法没有做处理，runtime会调用 <code>-(id)forwardingTargetForSelector:(SEL)aSelector</code> 方法。<br>如果该方法返回了一个非nil（也不能是self）的对象，而且该对象实现了这个方法，那么这个对象就成了消息的接收者，消息就被重定向到该对象。</p>
+<p>适用情况：通常在对象内部使用，让内部的另外一个对象处理消息，在外面看起来就像是该对象处理了消息。</p>
+<p>比如：zen 让好朋友 xiaoming 来接收这个消息。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)forwardingTargetForSelector:(SEL)aSelector</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(aSelector == <span class="keyword">@selector</span>(playBasketball))&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.xiaoming;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">super</span> forwardingTargetForSelector:aSelector];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>如果此方法返回nil或self,则会进入消息转发机制(forwardInvocation:);否则将向返回的对象重新发送消息</strong>。</p>
+<h4 id="完整消息转发"><a href="#完整消息转发" class="headerlink" title="完整消息转发"></a>完整消息转发</h4><p>在 <code>- (void)forwardInvocation:(NSInvocation *)anInvocation</code> 方法中选择转发消息的对象，其中anInvocation对象封装了未知消息的所有细节，并保留调用结果发送到原始调用者。<br>比如：zen 将消息完整转发給老师 Kobe 来处理</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)forwardInvocation:(<span class="built_in">NSInvocation</span> *)anInvocation </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([Kobe instancesRespondToSelector:anInvocation.selector]) </span><br><span class="line">    &#123;</span><br><span class="line">        [anInvocation invokeWithTarget: Kobe];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该消息的唯一参数是个 NSInvocation类型 的对象——该对象封装了原始的消息和消息的参数。我们可以实现<code>forwardInvocation:</code> 方法来对不能处理的消息做一些默认的处理，也可以将消息转发给其他对象来处理，而不抛出错误。</p>
+<p>在 <code>forwardInvocation:</code> 消息发送前，Runtime系统会向对象发送 <code>methodSignatureForSelector:</code> 消息，并取到返回的方法签名用于生成 <code>NSInvocation</code> 对象。所以我们在重写 <code>forwardInvocation:</code> 的同时也要重写 <code>methodSignatureForSelector:</code> 方法，否则会抛异常。</p>
+<p><strong>如果在以上三个方法都没有处理未知消息，则会引发异常</strong></p>
+<p>下面的示意图很好的解释了这个过程：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B.png" alt=""></p>
+<h2 id="Runtime-相关术语"><a href="#Runtime-相关术语" class="headerlink" title="Runtime 相关术语"></a>Runtime 相关术语</h2><p>之所以没有一开始就对这一部分进行分析与讨论，是因为觉得这一部分涉及一些源码，有点像冷了的馒头，有点难嚼；但是因为理解 runtime 的需要，我们又不得不“嚼”。所以放在了最后。</p>
+<p>这部分也是参考了各方资料啊。</p>
+<h3 id="SEL"><a href="#SEL" class="headerlink" title="SEL"></a>SEL</h3><p><code>SEL</code> 是 <strong>selector</strong> 在Objc中的表示类型。<br><strong>selector</strong> 是方法选择器，可以理解为区分方法的标志，而这个标志的数据结构是<code>SEL</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_selector *SEL;</span><br></pre></td></tr></table></figure>
+<p>它就是个映射到方法的C字符串，你可以用 Objc 编译器命令@selector()或者 Runtime 系统的sel_registerName函数来获得一个SEL类型的方法选择器。</p>
+<p>有时候我们可能会抱怨基于 Objc 的 Cocoa 函数又长又难记，其实是有原因的：<strong>不同类中相同名字的方法所对应的方法选择器是相同的，即使方法名字相同而变量类型不同也会导致它们具有相同的方法选择器</strong>，所以 Objc 函数命名有时会带上参数类型。</p>
+<h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p><code>id</code> 是一个指向类实例的指针：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_object *<span class="keyword">id</span>;</span><br></pre></td></tr></table></figure>
+<p>objc_object结构体包含一个isa指针:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> objc_object &#123; Class isa; &#125;;</span><br></pre></td></tr></table></figure>
+<p>要谨记的是，<strong>isa</strong> 指针不总是指向实例对象所属的类，不能依靠它来确定类型，而是应该用 <strong>class</strong> 方法来确定实例对象的类。</p>
+<h3 id="Class"><a href="#Class" class="headerlink" title="Class"></a>Class</h3><p>之所以说isa是指针是因为 <code>Class</code> 其实是一个指向 <strong>objc_class</strong> 结构体的指针：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_class *Class;</span><br></pre></td></tr></table></figure>
+<p><strong>objc_class</strong> 具体结构如下：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> objc_class &#123;</span><br><span class="line">    Class isa  OBJC_ISA_<span class="built_in">AVAILABILITY</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#if !__OBJC2__</span></span><br><span class="line">    Class super_class                                        OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *name                                         OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">long</span> version                                             OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">long</span> info                                                OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">long</span> instance_size                                       OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">struct</span> objc_ivar_list *ivars                             OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">struct</span> objc_method_list **methodLists                    OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">struct</span> objc_cache *cache                                 OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">struct</span> objc_protocol_list *protocols                     OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line"><span class="meta">#endif</span></span><br><span class="line"></span><br><span class="line">&#125; OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到运行时一个类还关联了它的超类指针，类名，成员变量，方法，缓存，还有附属的协议。</p>
+<p>在 <strong>objc_class</strong> 结构体中：</p>
+<p>ivars 是 objc_ivar_list 指针；methodLists 是指向 objc_method_list 指针的指针。也就是说可以动态修改 *methodLists 的值来添加成员方法，这也是Category实现的原理，同样解释了Category不能添加属性的原因。</p>
+<p>需要注意一点的是：</p>
+<p><strong>objc_class</strong> 中也有一个 <strong>isa</strong> 对象，这是因为一个 ObjC 类本身同时也是一个对象。</p>
+<blockquote>
+<p>为了处理类和对象的关系，runtime 库创建了一种叫做<strong>元类</strong> (Meta Class) 的东西，类对象所属类型就叫做元类，它用来表述类对象本身所具备的元数据。类方法就定义于此处，因为这些方法可以理解成类对象的实例方法。每个类仅有一个类对象，而每个类对象仅有一个与之相关的元类。</p>
+</blockquote>
+<p>当你发出一个类似 [NSObject alloc] 的消息时，你事实上是把这个消息发给了一个<strong>类对象</strong> (Class Object) ，<strong>这个类对象必须是一个元类的实例</strong>，而这个元类同时也是一个根元类 (root meta class) 的实例。<strong>所有的元类最终都指向根元类为其超类</strong>。所有的元类的方法列表都有能够响应消息的类方法。所以当 [NSObject alloc] 这条消息发给类对象的时候，objc_msgSend()<strong>会去它的元类里面去查找能够响应消息的方法</strong>，如果找到了，然后对这个类对象执行方法调用。</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/class.png" alt=""></p>
+<p>上图实线是 <code>super_class</code> 指针，虚线是 <code>isa</code> 指针。 有趣的是根元类的超类是 NSObject，而 isa 指向了自己，而 NSObject 的超类为nil，也就是它没有超类。</p>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><p><code>Method</code> 是一种代表类中的某个方法的类型:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_method *Method;</span><br></pre></td></tr></table></figure>
+<p><strong>objc_method</strong> 它存储了方法名，方法类型和方法实现：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> objc_method &#123;</span><br><span class="line">    SEL method_name                                          OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    <span class="keyword">char</span> *method_types                                       OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">    IMP method_imp                                           OBJC2_UN<span class="built_in">AVAILABLE</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>方法名类型为 SEL，前面提到过相同名字的方法即使在不同类中定义，它们的方法选择器也相同。</p>
+</li>
+<li><p>方法类型 method_types 是个 char 指针，其实存储着方法的参数类型和返回值类型。</p>
+</li>
+<li><p>method_imp 指向了方法的实现，本质上是一个函数指针，下面会详细讲到。</p>
+</li>
+</ul>
+<h3 id="IMP"><a href="#IMP" class="headerlink" title="IMP"></a>IMP</h3><p><code>IMP</code> 在objc.h中的定义是：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">id</span> (*IMP)(<span class="keyword">id</span>, SEL, ...);</span><br></pre></td></tr></table></figure>
+<p>它就是一个函数指针，这是由编译器生成的。当你发起一个 ObjC 消息之后，最终它会执行的那段代码，就是由这个函数指针指定的。而 IMP 这个函数指针就指向了这个方法的实现。</p>
+<p><code>IMP</code> 指向的方法与 <strong>objc_msgSend</strong> 函数类型相同，参数都包含 id 和 SEL 类型。每个方法名都对应一个 SEL 类型的方法选择器，而每个实例对象中的 SEL 对应的方法实现肯定是唯一的，通过一组 id 和 SEL参数就能确定唯一的方法实现地址。</p>
+<h3 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h3><p>在runtime.h中 <code>Cache</code> 的定义如下：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_cache *Cache</span><br></pre></td></tr></table></figure>
+<p><code>Cache</code> 为方法调用的性能进行优化，通俗地讲，每当实例对象接收到一个消息时，它不会直接在 isa 指向的类的方法列表中遍历查找能够响应消息的方法，因为这样效率太低了，而是优先在 <code>Cache</code> 中查找。Runtime 系统会把被调用的方法存到 <code>Cache</code> 中（理论上讲一个方法如果被调用，那么它有可能今后还会被调用），下次查找的时候效率更高。</p>
+<h2 id="Runtime-实战篇"><a href="#Runtime-实战篇" class="headerlink" title="Runtime 实战篇"></a>Runtime 实战篇</h2><p>这个先留一个坑，等我后续慢慢更新吧~</p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
