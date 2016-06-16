@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      聊聊那些iOS内存管理的关键字 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言这篇博文可能是在理解了iOS的内存管理机制的童鞋看起来会好懂一点。过后如果有时间，我也会更新写一写我对iOS的ARC以及MRC的理解。在平时的代码里，我们可能会经常看到，类似于：
+1@property (weak, nonatomic) UIButton *button;
+我们定义的属性，它所具有的参数，像 weak，strong，nonaomic 这些，各自有什么样的含义呢？请点开全文吧~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊那些iOS内存管理的关键字 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/06/17/聊聊那些iOS内存管理的关键字/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言这篇博文可能是在理解了iOS的内存管理机制的童鞋看起来会好懂一点。过后如果有时间，我也会更新写一写我对iOS的ARC以及MRC的理解。在平时的代码里，我们可能会经常看到，类似于：
+1@property (weak, nonatomic) UIButton *button;
+我们定义的属性，它所具有的参数，像 weak，strong，nonaomic 这些，各自有什么样的含义呢？请点开全文吧~">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/arc%E4%B8%8Emrc%E7%9A%84%E5%8C%BA%E5%88%AB.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/%E8%A1%A8.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/3.png">
+<meta property="og:updated_time" content="2016-06-16T17:31:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊那些iOS内存管理的关键字 | Zen3’s blog">
+<meta name="twitter:description" content="前言这篇博文可能是在理解了iOS的内存管理机制的童鞋看起来会好懂一点。过后如果有时间，我也会更新写一写我对iOS的ARC以及MRC的理解。在平时的代码里，我们可能会经常看到，类似于：
+1@property (weak, nonatomic) UIButton *button;
+我们定义的属性，它所具有的参数，像 weak，strong，nonaomic 这些，各自有什么样的含义呢？请点开全文吧~">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/arc%E4%B8%8Emrc%E7%9A%84%E5%8C%BA%E5%88%AB.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">聊聊那些iOS内存管理的关键字</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-06-17" class="post-meta__date date">2016-06-17</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/ARC-MRC/">ARC & MRC</a>, <a class="tags-link" href="/tags/Objective-C/">Objective-C</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇博文可能是在理解了iOS的内存管理机制的童鞋看起来会好懂一点。过后如果有时间，我也会更新写一写我对iOS的ARC以及MRC的理解。在平时的代码里，我们可能会经常看到，类似于：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">weak</span>, <span class="keyword">nonatomic</span>) <span class="built_in">UIButton</span> *button;</span><br></pre></td></tr></table></figure>
+<p>我们定义的属性，它所具有的参数，像 weak，strong，nonaomic 这些，各自有什么样的含义呢？请点开全文吧~</p>
+<a id="more"></a>
+<h2 id="从引用计数器开始谈起"><a href="#从引用计数器开始谈起" class="headerlink" title="从引用计数器开始谈起"></a>从引用计数器开始谈起</h2><p>我们知道在程序运行过程中要创建大量的对象，和其他高级语言类似，在 ObjC 中对象时存储在堆中的，系统并不会自动释放堆中的内存（注意基本类型是由系统自己管理的，放在栈上）。</p>
+<p>如果一个对象创建并使用后没有得到及时释放那么就会占用大量内存。其他高级语言如C#、Java都是通过垃圾回收来（GC）解决这个问题的，但在 OjbC 中并没有类似的垃圾回收机制，因此它的内存管理就需要由开发人员手动维护。</p>
+<p>那么ObjC中内存又是如何管理的呢？</p>
+<p>其实在ObjC中内存的管理是 <strong>依赖对象引用计数器</strong> 来进行的：在 ObjC 中每个对象内部都有一个与之对应的 <strong>整数</strong>（<code>retainCount</code>），叫<code>“引用计数器”</code>，当一个对象在创建之后它的引用计数器为1，当调用这个对象的 <strong>alloc</strong>、<strong>retain</strong>、<strong>new</strong>、<strong>copy</strong> 方法之后引用计数器自动在原来的基础上加1（<strong>ObjC中调用一个对象的方法就是给这个对象发送一个消息</strong>），当调用这个对象的 <strong>release</strong> 方法之后它的引用计数器减1，如果一个对象的引用计数器为0，则系统会自动调用这个对象的 <strong>dealloc</strong> 方法来销毁这个对象。</p>
+<p>在 Apple 官方文档里面有这样的一张介绍 MRC 与 ARC 的区别：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/arc%E4%B8%8Emrc%E7%9A%84%E5%8C%BA%E5%88%AB.png" alt=""></p>
+<p>之所以我们平时再写代码是不用花精力去考虑对象的内存管理，是因为<br>ObjC 中提供了两种内存管理机制 <code>MRC</code>（MannulReference Counting）和 <code>ARC</code>(Automatic Reference Counting)，分别提供对内存的手动和自动管理，来满足不同的需求。在Xcode 4.1及其以后版本支持了 <code>ARC</code>,现在我们也是基本都用 ARC 来做内存管理的。</p>
+<p>但是，如果想好好理解学习 ObjC 的内存管理，建议还是从 MRC 的知识慢慢慢学。</p>
+<h2 id="MRC-模式下的关键字"><a href="#MRC-模式下的关键字" class="headerlink" title="MRC 模式下的关键字"></a>MRC 模式下的关键字</h2><p>按照上面的思想，我们在 MRC 的模式下面管理对象，就需要在对象的 <strong>setter</strong> 方法里去对对象做 release 和 retain 操作了。</p>
+<p>保证每次属性赋值的时候对象引用计数器+1,这样一来调用过 getter 方法可以保对象不会被提前释放，其次为了保证上一次的赋值对象能够正常释放，我们在赋新值之前对原有的值进行 release 操作。</p>
+<p>这显然是一件比较烦人的事情，ObjC 虽说是一门比较古老的语言，但也不至于不人性化到这种地步，前言提及的 @property 属性就是来解决这一问题的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (retain) <span class="built_in">NSObject</span> *a;</span><br></pre></td></tr></table></figure>
+<p>加上 <strong>retain</strong> 参数，我们不必手动实现car的getter、setter方法程序仍然没有内存泄露。那么，除了 retain ，还有其他什么参数？它们又有什么作用呢？</p>
+<p>先进行一下总结，大致如下表：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/%E8%A1%A8.png" alt=""></p>
+<p>PS:表中所提及的默认值，并非 Xcode 为我们预输入的（Xcode 是会根据我们从storyborad 链接过来的控件为我们预输入3个属性）默认值是如果我们将它置空，它的值。置其中一类参数，程序会使用三类中的各个默认参数，默认参数：<strong>(atomic,readwrite,assign)</strong>。</p>
+<p>其中，</p>
+<ul>
+<li>assign，<strong>用于基本数据类型</strong></li>
+<li>retain，<strong>通常用于非字符串对象</strong></li>
+<li>copy，<strong>通常用于字符串对象、block、NSArray、NSDictionary</strong></li>
+</ul>
+<h2 id="ARC-模式下关键字"><a href="#ARC-模式下关键字" class="headerlink" title="ARC 模式下关键字"></a>ARC 模式下关键字</h2><p><strong>ARC</strong> 的推出，其实就是为了让我们可以专注于代码的业务逻辑而不用去理会我们使用的对象内存管理，因为 <strong>ARC</strong> 都已经为我们做好了。</p>
+<p><strong>ARC</strong> 在 <strong>MRC</strong> 的基础之上，增加了 <strong>strong</strong>，<strong>weak</strong>，<strong>unsafe_unretained</strong>， <strong>autoreleasing</strong> 等属性值。</p>
+<p>我在官方文档找到以下的解释：</p>
+<blockquote>
+<p><strong>__strong</strong> is the default. An object remains “alive” as long as there is a strong pointer to it.</p>
+<p><strong>__weak</strong> specifies a reference that does not keep the referenced object alive. A weak reference is set to nil when there are no strong references to the object.</p>
+<p><strong>__unsafe_unretained</strong> specifies a reference that does not keep the referenced object alive and is not set to nil when there are no strong references to the object. If the object it references is deallocated, the pointer is left dangling.</p>
+<p><strong>__autoreleasing</strong> is used to denote arguments that are passed by reference (id *) and are autoreleased on return.</p>
+</blockquote>
+<p> 我们使用的比较多的显然是 <code>strong</code> 和 <code>weak</code>。</p>
+<p> <code>strong</code> 相当于 MRC 中的 <code>retain</code>,</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// The following declaration is a synonym for: @property(retain) MyClass *myObject;</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">strong</span>) MyClass *myObject;</span><br></pre></td></tr></table></figure>
+<p><code>weak</code> 相当于 MRC  中的 <code>assign</code></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The following declaration is similar to "@property(assign) MyClass *myObject;"</span></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">weak</span>) MyClass *myObject;</span><br></pre></td></tr></table></figure>
+<p><code>copy</code> 的使用同于 MRC.</p>
+<p> 所以在 <strong>ARC</strong> 模式下，默认的属性是：</p>
+<ul>
+<li>对于非 NSObject 对象：<strong>(atomic,readwrite,assign)</strong></li>
+<li>对 NSObject 对象：<strong>(atomic,readwrite,strong)</strong></li>
+</ul>
+<p>根据官方文档的解释：</p>
+<p><code>strong</code> 用来修饰<strong>强</strong>引用的属性,一块内存（一个对象）当没有 <strong>strong</strong> 类型的指针指向它时，它就会被释放。</p>
+<p><code>weak</code> 用来修饰<strong>弱</strong>引用的属性，当一块内存（一个对象）被释放时，指向它的 <strong>weak</strong> 类型指针就会被释放并赋值为 nil。</p>
+<p>浅显一点解释呢，就是：</p>
+<p>如果将我们的对象比喻成一只狗的话，<strong>strong</strong> 类型的指针就像一条条狗链，只有当最后一条狗链断了，狗才可能走掉（也就是内存的释放）。而 <strong>weak</strong> 指针这是一个监视狗的监控摄像头，也可以看到狗的动态，但是不能强控着狗，当狗走了的时候，只能“目送”，然后默默关闭（相当于赋值nil），无能为力。</p>
+<h2 id="我自己的一些疑惑"><a href="#我自己的一些疑惑" class="headerlink" title="我自己的一些疑惑"></a>我自己的一些疑惑</h2><h3 id="copy-与-retain"><a href="#copy-与-retain" class="headerlink" title="copy 与 retain"></a>copy 与 retain</h3><p>开始写 ObjC 的时候，就看书或网上的博客会说：retain（strong），通常用于非字符串对象； copy，通常用于字符串对象、block、NSArray、NSDictionary.</p>
+<p>一开始也没有多想，把他当成是一个约定俗成的的规则，一直就按着这样来写了，今天整理这个文章的时候，还是思考了一下，看了下书，把想法很大家分享一下吧~</p>
+<p>自己写了个小例子：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  .h文件</span></span><br><span class="line"><span class="keyword">@property</span> (retain,<span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *retainStr;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>)  <span class="built_in">NSString</span> *copyStr;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  .m文件</span></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    <span class="built_in">NSMutableString</span> *str = [[<span class="built_in">NSMutableString</span> alloc] initWithString:<span class="string">@"abc"</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.retainStr = str;</span><br><span class="line">    <span class="keyword">self</span>.copyStr = str;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"mStr:%p,%p"</span>,str,&amp;str);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"retainStr:%p,%p"</span>, _retainStr, &amp;_retainStr);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"copyStr:%p,%p"</span>, _copyStr, &amp;_copyStr);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出的结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/%E7%BB%93%E6%9E%9C.png" alt=""></p>
+<p>从结果来分析：</p>
+<p>str <strong>对象的地址</strong> 为0x79e6f050，也就是0x79e6f050是@“abc”的首地址，<strong>str变量自身在内存中的地址</strong>为0xbff7cf7c；</p>
+<p>当把str赋值给 <code>retain</code> 的retainStr时，r<strong>etainStr对象的地址</strong> 为0x79e6f050，<strong>retainStr变量自身在内存中的地址</strong> 为0x79e6c8dc；retainStr与str指向<strong>同样的地址</strong>，他们指向的是同一个对象@“abc”，这个对象的地址为0x79e6f050，所以他们的值是一样的。</p>
+<p>当把str赋值给 <code>copy</code> 的copyStr时，<strong>copyStr对象的地址</strong>为0x79e6f0d0，<strong>copyStr变量自身在内存中的地址</strong>0x79e6c8e0；copyStr与str指向的地址是不一样的，他们指向的是<strong>不同的对象</strong>，所以copy是深复制，一个新的对象，这个对象的地址为0x22，值为@“abc”。</p>
+<p>补充上述的代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[str appendString:<span class="string">@"de"</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"retainStr:%@"</span>,  _retainStr);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"copyStr:%@"</span>,    _copyStr);</span><br></pre></td></tr></table></figure>
+<p>得到一下结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/2.png" alt=""></p>
+<p>那如果换成下面的代码：<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.copyStr appendString:<span class="string">@"de"</span>];</span><br></pre></td></tr></table></figure></p>
+<p>编译器器会报错：</p>
+<blockquote>
+<p>Terminating app due to uncaught exception ‘NSInvalidArgumentException’, reason: ‘Attempt to mutate immutable object with appendString:’</p>
+</blockquote>
+<p>即使我们把原先定义的关于 <strong>copyStr</strong> 的属性从 <strong>NSString</strong> 变为 <strong>NSMutableString</strong>：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>)  <span class="built_in">NSMutableString</span> *copyStr;</span><br></pre></td></tr></table></figure>
+<p>还是会出现一样的错误。</p>
+<p>而 <code>MRC</code>，用 <strong>retain</strong> 属性就没有问题：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.retainStr appendString:<span class="string">@"de"</span>];</span><br></pre></td></tr></table></figure>
+<p>而当我们把 str 的类型替换为 <code>NSString</code> 时:</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithString:<span class="string">@"abc"</span>];</span><br></pre></td></tr></table></figure>
+<p>得到结果如下：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/3.png" alt=""></p>
+<p>当类型为<code>NSString</code> 时，类似于C++, 相同内容的字符串在内存上是有着相同的地址的。<strong>copy</strong> 和 <strong>retain</strong> 对它的作用都是浅复制，也就只是单纯地指针复制。</p>
+<p>总结一下：</p>
+<ul>
+<li><p><code>retain</code>：始终是浅复制。引用计数每次加一。返回对象是否可变与被复制的对象保持一致。</p>
+</li>
+<li><p><code>copy</code>：对于可变对象为深复制，引用计数不改变;对于不可变对象是浅复制，引用计数每次加一。始终返回一个不可变对象（上面的报错就是修改了不可变对象）。</p>
+</li>
+</ul>
+<p>PS:如果需要深复制得到一个可变参数，可以使用 <code>mutableCopy</code>：</p>
+<ul>
+<li><code>mutableCopy</code> 始终是深复制，返回可变对象，引用计数不变。</li>
+</ul>
+<p><strong>所以，如果一般情况下，我们都不希望字串的值跟着str变化，所以我们一般用 <code>copy</code> 来设置string的属性。<br>如果希望字串的值跟着赋值的字串的值变化，可以使用 <code>strong，retain</code>。</strong></p>
+<p>当然这也只是针对 <strong>NSMutableString</strong>，因为如果是 <strong>NSString</strong> 那么 <strong>copy</strong> 与 <strong>retain</strong> 的效果是一样的。</p>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>原来写完已经一点半了，昏昏沉沉的，怕是有挺多的错别字，希望不要介意，如果有什么关于这个问题的，欢迎通过邮件来进行讨论~晚安~</p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
