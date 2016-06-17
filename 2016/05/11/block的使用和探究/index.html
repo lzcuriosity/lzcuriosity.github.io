@@ -36,7 +36,7 @@
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/block%E6%8E%A2%E7%A9%B6/eg.jpg">
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/block%E6%8E%A2%E7%A9%B6/8.png">
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/block%E6%8E%A2%E7%A9%B6/IMG_2977.JPG">
-<meta property="og:updated_time" content="2016-06-05T07:46:01.000Z">
+<meta property="og:updated_time" content="2016-06-17T15:17:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="block的使用和探究 | Zen3’s blog">
 <meta name="twitter:description" content="摘要这篇文章是我自己对 block 的使用和理解的总结吧，算是笔记。">
@@ -238,7 +238,7 @@ classes that you can use:
 <p>再下面是<strong>__main_block_desc_0结构体</strong>，其中比较有价值的信息是block大小。</p>
 <p>block2:</p>
 <p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/block%E6%8E%A2%E7%A9%B6/2.png" alt=""></p>
-<p>&#160; &#160; &#160; &#160;而 block2 相比于我后面写的 block4 ,差别主要在于main函数里传递的是a的地址（&amp;a），以及 __main_block_impl_1结构体中成员a变成指针类型（int <em>），实际是进行了指针的拷贝，将结构体传入 __main_block_func_1 函数中也是用一个临时变量 （int\</em>）来储存 a 的内存地址。</p>
+<p>&#160; &#160; &#160; &#160;而 block2 相比于我后面写的 block4 ,差别主要在于main函数里传递的是a的地址（&amp;a），以及 __main_block_impl_1结构体中成员a变成指针类型（int*），实际是进行了指针的拷贝，将结构体传入 __main_block_func_1 函数中也是用一个临时变量 （int*）来储存 a 的内存地址。</p>
 <p>&#160; &#160; &#160; &#160;然后在执行block时，通过指针修改值。</p>
 <p>block3:</p>
 <p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/block%E6%8E%A2%E7%A9%B6/3.png" alt=""></p>
@@ -268,7 +268,7 @@ classes that you can use:
 <ul>
 <li><p>void *__isa;</p>
 </li>
-<li><p>__Block_byref_a<em>0 *\</em>_forwarding;</p>
+<li><p>__Block_byref_a_0 *__forwarding;</p>
 <p>   定义一个指向与自己相同类型，即 __Block_byref_a_0 类型的指针。</p>
 </li>
 <li><p>int a;<br>   储存目标变量 a </p>

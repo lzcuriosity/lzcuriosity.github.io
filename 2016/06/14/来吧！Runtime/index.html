@@ -24,7 +24,7 @@
 <meta property="og:description" content="摘要最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是以一个菜鸟的角度介绍runtime，可能比较好懂吧，哈哈。接下来有空的话，我还会陆续更新一些，我在">
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%E6%B5%81%E7%A8%8B.png">
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runtime/class.png">
-<meta property="og:updated_time" content="2016-06-13T18:09:26.000Z">
+<meta property="og:updated_time" content="2016-06-17T15:04:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="来吧！Runtime~ | Zen3’s blog">
 <meta name="twitter:description" content="摘要最近面试iOS实习生，面试官都好喜欢来这么一句，“你了解OC的runtime吗？”。毫不夸张的说，有点像iOS程序员的必考题啊。可见，runtime 的重要性。所以，准备整理一下以前自己的笔记。写一写我对 runtime 的理解。虽然网上关于 runtime 的文章已经数不胜数，但是这篇博客主要是以一个菜鸟的角度介绍runtime，可能比较好懂吧，哈哈。接下来有空的话，我还会陆续更新一些，我在">
@@ -229,9 +229,9 @@ classes that you can use:
 </li>
 <li><p>如果还找不到就要面临以下两种情况了：</p>
 <ul>
-<li>使用 <code>[zen playBasketball]</code> 的方式调用方法``，编译器会在编译阶段帮你做好方法的检索，检索不到会立刻报错。<ul>
-<li>使用 <code>[zen performSelector:@selector(playBasketball)]</code> 的方式调用方法，编译器只会做出提醒，可以进行编译，需要到运行时才能确定对象是否接受指定的消息，开始进入消息的转发了，后面会提到。</li>
-</ul>
+<li><p>使用 <code>[zen playBasketball]</code> 的方式调用方法``，编译器会在编译阶段帮你做好方法的检索，检索不到会立刻报错。</p>
+</li>
+<li><p>使用 <code>[zen performSelector:@selector(playBasketball)]</code> 的方式调用方法，编译器只会做出提醒，可以进行编译，需要到运行时才能确定对象是否接受指定的消息，开始进入消息的转发了，后面会提到。</p>
 </li>
 </ul>
 <p>有点类似于自己搞不定的东西就丢给别人来搞咯，是不是很精髓？</p>
@@ -254,7 +254,7 @@ classes that you can use:
 <h2 id="Runtime-相关术语"><a href="#Runtime-相关术语" class="headerlink" title="Runtime 相关术语"></a>Runtime 相关术语</h2><p>之所以没有一开始就对这一部分进行分析与讨论，是因为觉得这一部分涉及一些源码，有点像冷了的馒头，有点难嚼；但是因为理解 runtime 的需要，我们又不得不“嚼”。所以放在了最后。</p>
 <p>这部分也是参考了各方资料啊。</p>
 <h3 id="SEL"><a href="#SEL" class="headerlink" title="SEL"></a>SEL</h3><p><code>SEL</code> 是 <strong>selector</strong> 在Objc中的表示类型。<br><strong>selector</strong> 是方法选择器，可以理解为区分方法的标志，而这个标志的数据结构是<code>SEL</code>:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef struct objc_selector *SEL;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> objc_selector *SEL;</span><br></pre></td></tr></table></figure>
 <p>它就是个映射到方法的C字符串，你可以用 Objc 编译器命令@selector()或者 Runtime 系统的sel_registerName函数来获得一个SEL类型的方法选择器。</p>
 <p>有时候我们可能会抱怨基于 Objc 的 Cocoa 函数又长又难记，其实是有原因的：<strong>不同类中相同名字的方法所对应的方法选择器是相同的，即使方法名字相同而变量类型不同也会导致它们具有相同的方法选择器</strong>，所以 Objc 函数命名有时会带上参数类型。</p>
 <h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p><code>id</code> 是一个指向类实例的指针：</p>
