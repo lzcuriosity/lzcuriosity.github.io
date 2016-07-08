@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      我所知道的UIApplication | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言每一个应用程序都有一个 UIApplication 或其子类型的实例。当程序被加载，函数方法 UIApplicationMain 就被调用执行，它创建了单件模式的 UIApplication对象。这篇博客会主要写写我对 UIApplication 的了解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我所知道的UIApplication | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/07/06/我所知道的UIApplication/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言每一个应用程序都有一个 UIApplication 或其子类型的实例。当程序被加载，函数方法 UIApplicationMain 就被调用执行，它创建了单件模式的 UIApplication对象。这篇博客会主要写写我对 UIApplication 的了解。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/1.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/7d34bfff51732232fb26b99f2adcb831.png">
+<meta property="og:updated_time" content="2016-07-08T16:21:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我所知道的UIApplication | Zen3’s blog">
+<meta name="twitter:description" content="前言每一个应用程序都有一个 UIApplication 或其子类型的实例。当程序被加载，函数方法 UIApplicationMain 就被调用执行，它创建了单件模式的 UIApplication对象。这篇博客会主要写写我对 UIApplication 的了解。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/1.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">我所知道的UIApplication</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-07-06" class="post-meta__date date">2016-07-06</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/UIApplication/">UIApplication</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>每一个应用程序都有一个 <strong>UIApplication</strong> 或其子类型的实例。当程序被加载，函数方法 <strong>UIApplicationMain</strong> 就被调用执行，它创建了单件模式的 <strong>UIApplication</strong>对象。这篇博客会主要写写我对 <strong>UIApplication</strong> 的了解。</p>
+<a id="more"></a>
+<h2 id="什么是-UIApplication"><a href="#什么是-UIApplication" class="headerlink" title="什么是 UIApplication"></a>什么是 UIApplication</h2><p>我是这么简单的概括 <strong>UIApplication</strong> 的：</p>
+<ol>
+<li><p><strong>UIApplication</strong> 对象是与我们的应用程序一一对应的。</p>
+</li>
+<li><p><strong>UIApplication</strong> 在运用程序中是以 <strong>单例</strong> 的形式存在。</p>
+</li>
+<li><p>iOS 程序启动第一个创建的对象就是 <strong>UIApplication</strong>。</p>
+</li>
+<li><p>我们常常会利用 <strong>UIApplication</strong> 来做一些应用级别的操作。</p>
+</li>
+</ol>
+<h3 id="从-UIApplication-的创建开始说起"><a href="#从-UIApplication-的创建开始说起" class="headerlink" title="从 UIApplication 的创建开始说起"></a>从 UIApplication 的创建开始说起</h3><p>程序的运行往往会起始于 <strong>main</strong> 函数，iOS 也不例外。在我们的工程文件目录底下会 <code>mian.m</code> 文件：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  main.m</span></span><br><span class="line"><span class="comment">//  TestForOC</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by lz on 15/7/27.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2015年 lz. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"AppDelegate.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[]) &#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIApplicationMain</span>(argc, argv, <span class="literal">nil</span>, <span class="built_in">NSStringFromClass</span>([AppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个默认的iOS程序就是从 <strong>main</strong> 函数开始执行的，但是在main函数中我们其实只能看到一个方法，这个方法内部是<strong>一个消息循环（相当于一个死循环）</strong>，因此运行到这个方法 <strong>UIApplicationMain</strong> 之后程序不会自动退出，而只有当用户手动关闭程序这个循环才结束。这个方法有四个参数：</p>
+<ul>
+<li><p>第一个参数和第二个参数其实就是main函数的参数，分别代表：参数个数、参数内容；</p>
+</li>
+<li><p>第三个参数代表UIApplication类（或子类）字符串，这个参数默认为nil则代表默认为UIApplication类，用户可以自定义一个类继承于这个类；如果为nil则等价于NSStringFromClass([UIApplication class])，大家可以自己试验，效果完全一样；</p>
+</li>
+<li><p>第四个参数是UIApplication的代理类字符串，默认生成的是AppDelegate类，这个类主要用于监听整个应用程序生命周期的各个事件，当UIApplication运行过程中引发了某个事件之后会调用代理中对应的方法；</p>
+</li>
+</ul>
+<p>也就是说当执行 <strong>UIApplicationMain</strong> 方法后这个方法会根据第三个参数创建对应的  <strong>UIApplication</strong> 对象，这个对象会根据第四个参数 <strong>AppDelegate</strong> 创建并指定此对象为UIApplication的代理；同时UIApplication会开启一个消息循环不断监听应用程序的各个活动，当应用程序生命周期发生改变 <strong>UIApplication</strong> 就会调用代理对应的方法。</p>
+<p>这就是 <strong>UIApplication</strong> 诞生的地方啦~</p>
+<h3 id="UIApplication-的使用"><a href="#UIApplication-的使用" class="headerlink" title="UIApplication 的使用"></a>UIApplication 的使用</h3><p>由于 <strong>UIApplication</strong> 是单例模式，所以我们不能和使用正常的类一样去 alloc、init 它，只能通过以下的方法对它进行调用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line">[<span class="built_in">UIApplication</span> sharedApplication];</span><br></pre></td></tr></table></figure>
+<p>常用有以下属性：</p>
+<ul>
+<li><strong>delegate</strong> 属性获取UIApplicationDelegate实现类的实例</li>
+<li><strong>windows</strong> 属性获取当前程序涉及到窗口类数组</li>
+<li><strong>keyWindow</strong> 属性获取当前程序关键窗口</li>
+</ul>
+<h3 id="可以做的应用级的操作有哪些"><a href="#可以做的应用级的操作有哪些" class="headerlink" title="可以做的应用级的操作有哪些"></a>可以做的应用级的操作有哪些</h3><p>在官方文档中，我们可以知道， <strong>UIApplication</strong> 能做的事情还是很多的，像我们会经常使用的：</p>
+<p>1.设置icon上的数字图标</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//设置主界面icon上的数字图标</span></span><br><span class="line">[<span class="built_in">UIApplicationsharedApplication</span>].applicationIconBadgeNumber = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+<p>2.判断程序运行状态</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//判断程序运行状态</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">/*</span><br><span class="line"></span><br><span class="line">  UIApplicationStateActive,</span><br><span class="line"></span><br><span class="line">  UIApplicationStateInactive,</span><br><span class="line"></span><br><span class="line">  UIApplicationStateBackground</span><br><span class="line"></span><br><span class="line">  */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>([<span class="built_in">UIApplicationsharedApplication</span>].applicationState ==<span class="built_in">UIApplicationStateInactive</span>)&#123;</span><br><span class="line"></span><br><span class="line">     <span class="built_in">NSLog</span>(<span class="string">@"程序在运行状态"</span>);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>3.阻止屏幕变暗进入休眠状态</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//阻止屏幕变暗,缺省为no, 慎重使用本功能，因为非常耗电。</span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">UIApplicationsharedApplication</span>].idleTimerDisabled =<span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+<p>4.显示联网状态</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//显示联网标记 </span></span><br><span class="line"></span><br><span class="line">[<span class="built_in">UIApplicationsharedApplication</span>].networkActivityIndicatorVisible =<span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+<p>5.发送电子邮件</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *recipients = <span class="string">@"mailto:first@example.com?cc=second@example.com,third@example.com&amp;subject=Hello from California!"</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSString</span> *body = <span class="string">@"&amp;body=It is raining in sunny California!"</span>;</span><br><span class="line"></span><br><span class="line"> <span class="built_in">NSString</span> *email = [<span class="built_in">NSStringstringWithFormat</span>:<span class="string">@"%@%@"</span>, recipients, body];</span><br><span class="line"></span><br><span class="line"> email = [emailstringByAddingPercentEscapesUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"></span><br><span class="line"> [[<span class="built_in">UIApplicationsharedApplication</span>]openURL:[<span class="built_in">NSURLURLWithString</span>:email]];</span><br></pre></td></tr></table></figure>
+<p>6.打电话到一个号码</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Call Google 411</span></span><br><span class="line"></span><br><span class="line">[[<span class="built_in">UIApplicationsharedApplication</span>]openURL:[<span class="built_in">NSURLURLWithString</span>:<span class="string">@"tel://8004664411"</span>]];</span><br></pre></td></tr></table></figure>
+<p>7.发送短信</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Text to Google SMS</span></span><br><span class="line"></span><br><span class="line">[[<span class="built_in">UIApplicationsharedApplication</span>]openURL:[<span class="built_in">NSURLURLWithString</span>:<span class="string">@"sms://466453"</span>]];</span><br></pre></td></tr></table></figure>
+<p>8.打开一个网址<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Lanuch any iPhone developers fav site</span></span><br><span class="line"></span><br><span class="line"> [[<span class="built_in">UIApplicationsharedApplication</span>]openURL:[<span class="built_in">NSURLURLWithString</span>:<span class="string">@"http://itunesconnect.apple.com"</span>]];</span><br></pre></td></tr></table></figure></p>
+<h2 id="UIApplication-Delegate"><a href="#UIApplication-Delegate" class="headerlink" title="UIApplication Delegate"></a>UIApplication Delegate</h2><p>上面我们也提及了 <strong>AppDelegate</strong>，在项目底下我们会看到 <strong>AppDelegate</strong> 的类，它就是 <strong>UIApplication</strong> 的代理。 <strong>AppDelegate</strong> 默认已经遵守了 <strong>UIApplicationDelegate</strong> 协议，已经是 <strong>UIApplication</strong> 的代理。</p>
+<p>这个类中定义了应用程序生命周期中各个事件的执行方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions;</span><br><span class="line"><span class="comment">//程序启动之后执行，只有在第一次程序启动后才执行，以后不再执行；</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationWillResignActive:(<span class="built_in">UIApplication</span> *)application;</span><br><span class="line"><span class="comment">//程序将要被激活时（获得焦点）执行，程序激活用户才能操作；</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationDidEnterBackground:(<span class="built_in">UIApplication</span> *)application;</span><br><span class="line"><span class="comment">//程序进入后台后执行，注意进入后台时会先失去焦点再进入后台；</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationWillEnterForeground:(<span class="built_in">UIApplication</span> *)application;</span><br><span class="line"><span class="comment">//程序将要进入前台时执行；</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationDidBecomeActive:(<span class="built_in">UIApplication</span> *)application;</span><br><span class="line"><span class="comment">//程序被激活（获得焦点）后执行，注意程序被激活时会先进入前台再被激活；</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)applicationWillTerminate:(<span class="built_in">UIApplication</span> *)application;</span><br><span class="line"><span class="comment">//程序在终止时执行，包括正常终止或异常终止，例如说一个应用程序在后太运行（例如音乐播放软件、社交软件等）占用太多内存这时会意外终止调用此方法；</span></span><br></pre></td></tr></table></figure>
+<h2 id="程序启动完整过程"><a href="#程序启动完整过程" class="headerlink" title="程序启动完整过程"></a>程序启动完整过程</h2><p>前面讲了很多关于程序启动与初始化的东西，那也就顺带提一下，有关程序启动的完整过程，我大概画了一下：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/1.png" alt=""><br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/2.png" alt=""></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>最近在实习中陆陆续续的修复了一些bug，get 到了不少知识点，过几天有机会可以整理成笔记分享出来~今天就到这了！买了预售的电影票~期待周末快快到来！<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E6%89%80%E7%9F%A5%E9%81%93%E7%9A%84UIApplication/7d34bfff51732232fb26b99f2adcb831.png" alt=""></p>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/07/06/我所知道的UIApplication/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
