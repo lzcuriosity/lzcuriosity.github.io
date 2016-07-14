@@ -16,23 +16,17 @@
     
     
 
-    <meta name="description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。
-图片灰度前几天有这么个需求，APP 有一个活动页面，里面有很多活动的展示图片，有一些活动是正在进行的（彩色，可点击）；有一些活动呢，就是已经过期的（黑白，不可点击）。
-由于设计师比较忙，一直没有给出黑白的活动图，所以呢。我就想着能不">
+    <meta name="description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="源码分享：比较有趣的功能代码 | Zen3’s blog">
 <meta property="og:url" content="http://yoursite.com/2016/07/14/源码分享：比较有趣的功能代码/index.html">
 <meta property="og:site_name" content="Zen3’s blog">
-<meta property="og:description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。
-图片灰度前几天有这么个需求，APP 有一个活动页面，里面有很多活动的展示图片，有一些活动是正在进行的（彩色，可点击）；有一些活动呢，就是已经过期的（黑白，不可点击）。
-由于设计师比较忙，一直没有给出黑白的活动图，所以呢。我就想着能不">
+<meta property="og:description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。">
 <meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-07-14%20%E4%B8%8B%E5%8D%881.33.18.png">
-<meta property="og:updated_time" content="2016-07-14T05:34:38.000Z">
+<meta property="og:updated_time" content="2016-07-14T05:36:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码分享：比较有趣的功能代码 | Zen3’s blog">
-<meta name="twitter:description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。
-图片灰度前几天有这么个需求，APP 有一个活动页面，里面有很多活动的展示图片，有一些活动是正在进行的（彩色，可点击）；有一些活动呢，就是已经过期的（黑白，不可点击）。
-由于设计师比较忙，一直没有给出黑白的活动图，所以呢。我就想着能不">
+<meta name="twitter:description" content="前言最近在工作中，写到的两段自己感觉比较有趣的代码，一个是将一张彩色的图片变灰度的，另一个是让AlertView背后的蒙层点击可以让AlertView消失，分享出来。">
 <meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%BA%90%E7%A0%81%E5%88%86%E4%BA%AB/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-07-14%20%E4%B8%8B%E5%8D%881.33.18.png">
     
     
@@ -238,6 +232,7 @@ classes that you can use:
 
   <section id="post-content" class="article-content post">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在工作中，写到的两段自己感觉比较有趣的代码，一个是<strong>将一张彩色的图片变灰度的</strong>，另一个是<strong>让AlertView背后的蒙层点击可以让AlertView消失</strong>，分享出来。</p>
+<a id="more"></a>
 <h2 id="图片灰度"><a href="#图片灰度" class="headerlink" title="图片灰度"></a>图片灰度</h2><p>前几天有这么个需求，APP 有一个活动页面，里面有很多活动的展示图片，有一些活动是正在进行的（彩色，可点击）；有一些活动呢，就是已经过期的（黑白，不可点击）。</p>
 <p>由于设计师比较忙，一直没有给出黑白的活动图，所以呢。我就想着能不能自己用代码实现一下。</p>
 <p>其实让图片变成有一定灰度的，可以在 <strong>UIImageView</strong> 上面添加一个 <strong>UIView</strong> ，这个 <strong>UIView</strong> 具有一定的透明度的黑色，应该也是可以实现的。但是不太优雅。</p>
