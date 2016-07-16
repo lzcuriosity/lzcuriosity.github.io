@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      源码分享：仿微信的WebViewProgress | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="摘要这是一个仿照微信的WebViewProgress，与github上多星的 NJKWebViewProgress 有所区别，有兴趣可以看看。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分享：仿微信的WebViewProgress | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/07/16/源码分享：仿微信的WebViewProgress/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="摘要这是一个仿照微信的WebViewProgress，与github上多星的 NJKWebViewProgress 有所区别，有兴趣可以看看。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/WebViewProgress/%20lz%E6%AD%A3%E5%B8%B8.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/WebViewProgress/lz%E4%B8%8D%E6%AD%A3%E5%B8%B8.gif">
+<meta property="og:updated_time" content="2016-07-16T16:47:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码分享：仿微信的WebViewProgress | Zen3’s blog">
+<meta name="twitter:description" content="摘要这是一个仿照微信的WebViewProgress，与github上多星的 NJKWebViewProgress 有所区别，有兴趣可以看看。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/WebViewProgress/%20lz%E6%AD%A3%E5%B8%B8.gif">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">源码分享：仿微信的WebViewProgress</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-07-16" class="post-meta__date date">2016-07-16</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/WebViewProgress/">WebViewProgress</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/源码分享/">源码分享</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>这是一个仿照微信的WebViewProgress，与github上多星的 <a href="https://github.com/ninjinkun/NJKWebViewProgress" target="_blank" rel="external"><strong>NJKWebViewProgress</strong></a> 有所区别，有兴趣可以看看。</p>
+<a id="more"></a>
+<h2 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h2><h3 id="iOS-与-Android-的区别"><a href="#iOS-与-Android-的区别" class="headerlink" title="iOS 与 Android 的区别"></a>iOS 与 Android 的区别</h3><p>最近看到在项目里面的 webview 加载的时候使用菊花图转圈圈，由于iOS的 web 加载机制与 Android 不同：<strong>Android 是会等整个页面load完毕再进行显示；而 iOS 并非这样，会一边 load 一边显示</strong>。所以设计 iOS 和 Android 一样使用菊花图，反而浪费了 iOS 本身加载的优势。因为我们只能在： <strong>webViewDidFinishLoad</strong> 方法让菊花图消失，加载网页的过程，菊花图会一直挡住前面，影响我们浏览。</p>
+<h3 id="UIWebView-本身的限制"><a href="#UIWebView-本身的限制" class="headerlink" title="UIWebView 本身的限制"></a>UIWebView 本身的限制</h3><p>而熟悉iOS开发的的都知道，iOS 的 <strong>UIWebView</strong> 并没有向我们提供与加载网页进度相关的 API,我们是没有办法得知加载进度的。我们能使用的只有 <strong>UIWebViewDelegate</strong> 以下几个方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)webViewDidStartLoad:(<span class="built_in">UIWebView</span> *)webView;      <span class="comment">//开始加载</span></span><br><span class="line">- (<span class="keyword">void</span>)webViewDidFinishLoad:(<span class="built_in">UIWebView</span> *)webView      <span class="comment">//加载完毕</span></span><br><span class="line">- (<span class="keyword">void</span>)webView:(<span class="built_in">UIWebView</span> *)webView didFailLoadWithError:(<span class="built_in">NSError</span> *)error       <span class="comment">//加载失败</span></span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><h3 id="NJKWebViewProgress-的实现"><a href="#NJKWebViewProgress-的实现" class="headerlink" title="NJKWebViewProgress 的实现"></a>NJKWebViewProgress 的实现</h3><p><strong>webViewDidStartLoad</strong> 是一个请求的开始，所有的请求都要经过它，未加载资源之前，能够得到一个URL 有多少个资源需要加载，使用_loadingCount++ 方式来计数。<br><strong>webViewDidFinishLoad</strong>、<strong>didFailLoadWithError</strong> 是一个请求的结束，每次请求结束 _loadingCount –,并重新计数进度，进度使用 _loadingCount/_maxLoadCount 的方式来计算。但是这种做法也是有一定弊端的：<strong>进度条经常卡在1/4的地方，然后突然启动加载完毕，有点不流畅</strong>。</p>
+<h3 id="我猜测的wechat的做法"><a href="#我猜测的wechat的做法" class="headerlink" title="我猜测的wechat的做法"></a>我猜测的wechat的做法</h3><p>我们在平时使用wechat时，会发现即使你网络很差，甚至是没有网络的时候，加载的进度条还是会一直走到达末端停止，最后超时才显示网络故障；这样无疑会给用户较好的体验，毕竟进度条一直走，即使网页没有在加载，我们也会以为他一直在加载，很安心的feel。</p>
+<h3 id="我的做法"><a href="#我的做法" class="headerlink" title="我的做法"></a>我的做法</h3><p>我参考了wechat的做法，写了一个加速度的三次递减的进度条。</p>
+<p>把进度条设置为 1000，初始化为100，各个阶段的递增值如下：</p>
+<ul>
+<li>0 ~ 500： 每 100ms 增加 50</li>
+<li>500 ~ 700： 每 100ms 增加 20</li>
+<li>700 ~ 800： 每 100ms 增加 15</li>
+<li>800 ~ 920： 每 100ms 增加 1</li>
+<li>920 ：卡住等待超时</li>
+</ul>
+<p>用到 GCD 的延时循环加载。具体可查看代码。</p>
+<h2 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h2><h3 id="网络正常"><a href="#网络正常" class="headerlink" title="网络正常"></a>网络正常</h3><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/WebViewProgress/%20lz%E6%AD%A3%E5%B8%B8.gif" alt=""></p>
+<hr>
+<h3 id="网络不正常"><a href="#网络不正常" class="headerlink" title="网络不正常"></a>网络不正常</h3><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/WebViewProgress/lz%E4%B8%8D%E6%AD%A3%E5%B8%B8.gif" alt=""></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="导入头文件"><a href="#导入头文件" class="headerlink" title="导入头文件"></a>导入头文件</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"LZProgresSHeader.h"</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="需要对象"><a href="#需要对象" class="headerlink" title="需要对象"></a>需要对象</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LZWebViewProgressView *_progressView;</span><br><span class="line">LZWebViewProgress *_progressProxy;</span><br></pre></td></tr></table></figure>
+<h3 id="具体代码"><a href="#具体代码" class="headerlink" title="具体代码"></a>具体代码</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"LZProgresSHeader.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()&lt;<span class="title">UIWebViewDelegate</span>,<span class="title">LZWebViewProgressDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">weak</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIWebView</span> *webView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line">&#123;</span><br><span class="line">    LZWebViewProgressView *_progressView;</span><br><span class="line">    LZWebViewProgress *_progressProxy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">self</span>.automaticallyAdjustsScrollViewInsets = <span class="literal">NO</span>;</span><br><span class="line"></span><br><span class="line">    _progressProxy = [[LZWebViewProgress alloc] init];</span><br><span class="line">    _webView.delegate = _progressProxy;</span><br><span class="line">    _progressProxy.webViewProxyDelegate = <span class="keyword">self</span>;</span><br><span class="line">    _progressProxy.progressDelegate = <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGFloat</span> progressBarHeight = <span class="number">2.</span>f;</span><br><span class="line">    <span class="built_in">CGRect</span> navigationBarBounds = <span class="keyword">self</span>.navigationController.navigationBar.bounds;</span><br><span class="line">    <span class="built_in">CGRect</span> barFrame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, navigationBarBounds.size.height - progressBarHeight, navigationBarBounds.size.width, progressBarHeight);</span><br><span class="line">    _progressView = [[LZWebViewProgressView alloc] initWithFrame:barFrame];</span><br><span class="line">    _progressView.autoresizingMask = <span class="built_in">UIViewAutoresizingFlexibleWidth</span> | <span class="built_in">UIViewAutoresizingFlexibleTopMargin</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSURLRequest</span> *req = [[<span class="built_in">NSURLRequest</span> alloc] initWithURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://www.bilibili.com"</span>]];</span><br><span class="line">    [<span class="keyword">self</span>.webView loadRequest:req];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewWillAppear:(<span class="built_in">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewWillAppear:animated];</span><br><span class="line">    [<span class="keyword">self</span>.navigationController.navigationBar addSubview:_progressView];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)viewWillDisappear:(<span class="built_in">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">super</span> viewWillDisappear:animated];</span><br><span class="line">    [_progressView removeFromSuperview];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#pragma mark - NJKWebViewProgressDelegate</span></span><br><span class="line">-(<span class="keyword">void</span>)webViewProgress:(LZWebViewProgress *)webViewProgress updateProgress:(<span class="keyword">float</span>)progress</span><br><span class="line">&#123;</span><br><span class="line">    [_progressView setProgress:progress];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>具体可查看我的 demo 实现。</p>
+<h2 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h2><p>这里面的 <strong>LZWebViewProgress</strong> 文件是需要导入的SDK; <strong>WechatWebViewProgressDemo</strong> 是上面我写的使用演示demo。</p>
+<p><a href="https://github.com/lzcuriosity/WechatWebViewProgress" target="_blank" rel="external">github链接</a></p>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>今天！剪了！最帅！的！短！头发！</p>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/07/16/源码分享：仿微信的WebViewProgress/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
