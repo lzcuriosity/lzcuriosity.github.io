@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      我的笔记整理（二） | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言这是近期的笔记整理，主要是项目里碰到的一些小问题，自己记录下来，在小小的拓展一下，毕竟“知其所以然”也是非常重要的嘛~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的笔记整理（二） | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/07/18/我的笔记整理（二）/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言这是近期的笔记整理，主要是项目里碰到的一些小问题，自己记录下来，在小小的拓展一下，毕竟“知其所以然”也是非常重要的嘛~">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/bug.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/heiboy.jpg">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/boundsframe.jpg">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-07-20%20%E4%B8%8A%E5%8D%8810.09.59.png">
+<meta property="og:updated_time" content="2016-07-20T03:25:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我的笔记整理（二） | Zen3’s blog">
+<meta name="twitter:description" content="前言这是近期的笔记整理，主要是项目里碰到的一些小问题，自己记录下来，在小小的拓展一下，毕竟“知其所以然”也是非常重要的嘛~">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/bug.gif">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">我的笔记整理（二）</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-07-18" class="post-meta__date date">2016-07-18</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/笔记/">笔记</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这是近期的笔记整理，主要是项目里碰到的一些小问题，自己记录下来，在小小的拓展一下，毕竟“知其所以然”也是非常重要的嘛~</p>
+<a id="more"></a>
+<h2 id="frame-与-bounds"><a href="#frame-与-bounds" class="headerlink" title="frame 与 bounds"></a>frame 与 bounds</h2><p>在定义各种 <strong>view</strong> 的位置时，我们很经常会用到 <strong>frame</strong> 这个属性，又时候也会用到 <strong>bound</strong>，他们两者有什么区别呢？</p>
+<p>是最近项目里一个诡异的现象引起我的注意，为了更好的展示效果，我现在去复现一下这个bug，我真是机智：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/bug.gif" alt=""></p>
+<p>我描述一下：</p>
+<p>这是一个地点选择的页面，左上角的 <strong>button</strong> 根据所选泽的地点的名称长短动态的去修改 button 的宽。在自定义button文件用的代码大概是这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span> setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, length, <span class="number">40</span>)];</span><br></pre></td></tr></table></figure>
+<p>而这个button在页面初始化的时候，就已经：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBarButtonItem</span> *btnItem = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithCustomView:button];</span><br><span class="line">[<span class="keyword">self</span>.viewController.navigationItem setRightBarButtonItem:btnItem animated:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
+<p>而当每次我点击 pickerview 为 其选择地点而导致调用了：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span> setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, length, <span class="number">40</span>)];</span><br></pre></td></tr></table></figure>
+<p>你发现了吗？！！<br>按钮先飘逸到导航栏的坐标，然后再次漂移回来。excuse me？？？</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/heiboy.jpg" alt=""></p>
+<p>iOS开发的一个缺点就是看不见源码，这有时候会让我们看到一些现象感觉莫名其妙。</p>
+<p>但是解决的方法总是有的:</p>
+<p>通过打印 <strong>button</strong> 的父视图，我发现竟然不是我所以为的 <strong>btnItem</strong> 或者是说 <strong>navigationItem</strong>；而是直接的这个：<strong>UINavigationBar</strong>。</p>
+<p>这样它会漂移到左边的原因就比较明显了，我以为它的父控件会是已经固定好在左上角的 <strong>navigationItem</strong>，所以<strong>设置了他的xy坐标为（0，0）</strong>；导致他位移。</p>
+<p>后来又能漂移回来，可能是 iOS 本身对 <strong>navigationItem</strong> 的处理吧？这个也只是我的猜测，没有源码，只能进行最大程度的推理。</p>
+<p>那么应该怎么解决呢？</p>
+<p>这时候就需要 <strong>bounds</strong> 的登场了。</p>
+<p>Standford 的教学视频里面的是这样区别 frame 和 bounds 的。</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/boundsframe.jpg" alt=""></p>
+<p><strong>frame</strong>: 该view在父view坐标系统中的位置和大小。（参照点是，父亲的坐标系统）</p>
+<p><strong>bounds</strong>: 该view在本地坐标系统中的位置和大小。（参照点是，本地坐标系统，就相当于自己的坐标系统，以0,0点为起点）</p>
+<p>下面这段代码会比较清楚的解释：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *view1 = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">20</span>, <span class="number">20</span>, <span class="number">280</span>, <span class="number">250</span>)];  </span><br><span class="line">[view1 setBounds:<span class="built_in">CGRectMake</span>(<span class="number">-20</span>, <span class="number">-20</span>, <span class="number">280</span>, <span class="number">250</span>)];  </span><br><span class="line">view1.backgroundColor = [<span class="built_in">UIColor</span> redColor];  </span><br><span class="line">[<span class="keyword">self</span>.view addSubview:view1];<span class="comment">//添加到self.view  </span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"view1 frame:%@========view1 bounds:%@"</span>,<span class="built_in">NSStringFromCGRect</span>(view1.frame),<span class="built_in">NSStringFromCGRect</span>(view1.bounds));  </span><br><span class="line">  </span><br><span class="line"><span class="built_in">UIView</span> *view2 = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>)];  </span><br><span class="line">view2.backgroundColor = [<span class="built_in">UIColor</span> yellowColor];  </span><br><span class="line">[view1 addSubview:view2];<span class="comment">//添加到view1上,[此时view1坐标系左上角起点为(-20,-20)]  </span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"view2 frame:%@========view2 bounds:%@"</span>,<span class="built_in">NSStringFromCGRect</span>(view2.frame),<span class="built_in">NSStringFromCGRect</span>(view2.bounds));</span><br></pre></td></tr></table></figure>
+<p>运行的结果如下：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E6%88%91%E7%9A%84%E7%AC%94%E8%AE%B0/2/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202016-07-20%20%E4%B8%8A%E5%8D%8810.09.59.png" alt=""></p>
+<p>总结一下：<strong>bounds 改变的是自己本身坐标原点的相对坐标值</strong>，影响的的是自己的子视图的位置。</p>
+<p>所以上面，bug的解决方式就是：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span> setBounds:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, length, <span class="number">40</span>)];</span><br></pre></td></tr></table></figure>
+<h2 id="单例模式的实现"><a href="#单例模式的实现" class="headerlink" title="单例模式的实现"></a>单例模式的实现</h2><h3 id="什么是单例模式"><a href="#什么是单例模式" class="headerlink" title="什么是单例模式"></a>什么是单例模式</h3><p>单例模式用于当一个类只能有一个实例的时候， 通常情况下这个“单例”代表的是某一个物理设备比如打印机，或是某种不可以有多个实例同时存在的虚拟资源或是系统属性比如一个程序的某个引擎或是数据。用单例模式加以控制是非常有必要的。</p>
+<p>举个最简单的例子，网易云音乐的播放器controller就是用的就是单例实现，我们可以从不同的入口访问到同一个实例。</p>
+<h3 id="单例模式需要达到的目的"><a href="#单例模式需要达到的目的" class="headerlink" title="单例模式需要达到的目的"></a>单例模式需要达到的目的</h3><ul>
+<li><p>封装一个共享的资源</p>
+</li>
+<li><p>提供一个固定的实例创建方法</p>
+</li>
+<li><p>提供一个标准的实例访问接口</p>
+</li>
+</ul>
+<h3 id="创建的方法"><a href="#创建的方法" class="headerlink" title="创建的方法"></a>创建的方法</h3><p>以创建一个MySingletonClass的单例模式为例。首先，我们需要定义一个类MySingletonClass.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- <span class="class"><span class="keyword">@interface</span> <span class="title">MySingletonClass</span>:<span class="title">NSObject</span> </span>&#123;</span><br><span class="line">-</span><br><span class="line">- &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> MySingletonClass *sharedCLDelegate = <span class="literal">nil</span>;</span><br><span class="line">+(MySingletonClass *)sharedInstance&#123;</span><br><span class="line">     <span class="keyword">@synchronized</span>(<span class="keyword">self</span>) &#123;</span><br><span class="line">         <span class="keyword">if</span>(sharedCLDelegate == <span class="literal">nil</span>) &#123;</span><br><span class="line">            [[[<span class="keyword">self</span> class] alloc] init]; <span class="comment">//   assignment   not   done   here</span></span><br><span class="line">-         &#125;</span><br><span class="line">-     &#125;</span><br><span class="line">-     <span class="keyword">return</span> sharedCLDelegate;</span><br><span class="line">- &#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中（用到了关键字@synchronized是为了保证我们的单例的线程级别的安全，可以适用于多线程模式下。）static变量sharedCLDelegate用于存储一个单例的指针，并且强制所有对该变量的访问都必须通过类方法   +(id)sharedInstance，在对   +(id)sharedInstance 第一次调用时候完成实例的创建。这里值得留意一下的是，上面代码中用的是[[selfclass] alloc]，而不是 [MySingletonClass alloc],一般情况下这两种写法产生同样的效果。</p>
+<p><strong>但是这里这样做是为了更好的利用面向对象的性质，[self class]可以动态查找并确定类的类型从而便于实现对该类的子类化。</strong></p>
+<h4 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h4><p>这是官方推荐的方法：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">+ (AccountManager *)sharedManager</span><br><span class="line">&#123;</span><br><span class="line">         <span class="keyword">static</span> MySingletonClass *sharedCLDelegate = <span class="literal">nil</span>;</span><br><span class="line">         <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> predicate;</span><br><span class="line">         <span class="built_in">dispatch_once</span>(&amp;predicate, ^&#123;</span><br><span class="line">                 sharedCLDelegate = [[<span class="keyword">self</span> alloc] init];</span><br><span class="line">         &#125;);</span><br><span class="line">     <span class="keyword">return</span> sharedCLDelegate; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/07/18/我的笔记整理（二）/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
