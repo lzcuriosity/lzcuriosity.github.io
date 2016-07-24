@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      让Masonry来拯救你的AutoLayout | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言iPhone6 屏幕尺寸出现之后，大部分开发者都也开始使用起 Autolayout 来进行UI的布局了。相比之前的 autoresizingMask ，Autolayout 的有点不言而喻。之前自己一直用 storyboard 或者是 xib 来进行开发。感觉 Autolayout 就是几个约束，控件的拖拖拉拉，有趣也简单。直到最近。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让Masonry来拯救你的AutoLayout | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/07/21/让Masonry来拯救你的AutoLayout/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言iPhone6 屏幕尺寸出现之后，大部分开发者都也开始使用起 Autolayout 来进行UI的布局了。相比之前的 autoresizingMask ，Autolayout 的有点不言而喻。之前自己一直用 storyboard 或者是 xib 来进行开发。感觉 Autolayout 就是几个约束，控件的拖拖拉拉，有趣也简单。直到最近。。。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/masonry/IMG_3578.jpg">
+<meta property="og:updated_time" content="2016-07-21T13:01:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让Masonry来拯救你的AutoLayout | Zen3’s blog">
+<meta name="twitter:description" content="前言iPhone6 屏幕尺寸出现之后，大部分开发者都也开始使用起 Autolayout 来进行UI的布局了。相比之前的 autoresizingMask ，Autolayout 的有点不言而喻。之前自己一直用 storyboard 或者是 xib 来进行开发。感觉 Autolayout 就是几个约束，控件的拖拖拉拉，有趣也简单。直到最近。。。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/masonry/IMG_3578.jpg">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+<center><img alt='' style="width: 26%;height: 20%;border-radius: 6rem;border: 3px solid #fff;margin-bottom: 1.5em;" src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%85%B3%E4%BA%8E%E6%88%91/me.png"></center>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">让Masonry来拯救你的AutoLayout</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-07-21" class="post-meta__date date">2016-07-21</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/Autolayout/">Autolayout</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/masonry/">masonry</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>iPhone6 屏幕尺寸出现之后，大部分开发者都也开始使用起 <strong>Autolayout</strong> 来进行UI的布局了。相比之前的 <strong>autoresizingMask</strong> ，<strong>Autolayout</strong> 的有点不言而喻。之前自己一直用 <strong>storyboard</strong> 或者是 <strong>xib</strong> 来进行开发。感觉 <strong>Autolayout</strong> 就是几个约束，控件的拖拖拉拉，有趣也简单。直到最近。。。</p>
+<a id="more"></a>
+<p>当你开始进行多人项目合作，用拖拽来实现 <strong>Autolayout</strong> 的弊端就显现了，在两个人同时对一个 <strong>storyboard</strong> 文件进行修改，在 svn 上 进行文件 <strong>merge</strong> 时，文件往往是会有冲突的。而且有时冲突报错还是比较能以解决的。所以多人项目里一般会用纯代码来实现UI布局。于是与，我向我的实习导师借来了下面这本书：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/masonry/IMG_3578.jpg" alt=""></p>
+<p>准备潜心修炼！</p>
+<p>但是现实总是比较骨感的~这语法又臭又长~我觉得上面这本书应该叫《Autolayout从入门到放弃》。</p>
+<p>有种小学看红楼梦的感觉。但是“红楼梦”是好东西啊，就像 <strong>Autolayout</strong> 一样。事情总是有解决方法的：对于新手来说，入门 <strong>Autolayout</strong> 的捷径就是 <strong>Masonry</strong>。</p>
+<h2 id="什么是-Masonry"><a href="#什么是-Masonry" class="headerlink" title="什么是 Masonry"></a>什么是 Masonry</h2><p><strong>Masonry</strong> 是一个轻量级的布局框架，拥有自己的描述语法，采用更优雅的链式语法封装自动布局 简洁明了，并具有高可读性 而且同时支持 iOS 和 Max OS X。</p>
+<p>如果我们使用原生的 <strong>Autolayout</strong> 代码，可能会有下面这一坨：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *superview = <span class="keyword">self</span>.view;</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIView</span> *view1 = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">view1.translatesAutoresizingMaskIntoConstraints = <span class="literal">NO</span>;</span><br><span class="line">view1.backgroundColor = [<span class="built_in">UIColor</span> greenColor];</span><br><span class="line">[superview addSubview:view1];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIEdgeInsets</span> padding = <span class="built_in">UIEdgeInsetsMake</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">[superview addConstraints:@[</span><br><span class="line"></span><br><span class="line">    <span class="comment">//view1 constraints</span></span><br><span class="line">    [<span class="built_in">NSLayoutConstraint</span> constraintWithItem:view1</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeTop</span></span><br><span class="line">                                 relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                    toItem:superview</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeTop</span></span><br><span class="line">                                multiplier:<span class="number">1.0</span></span><br><span class="line">                                  constant:padding.top],</span><br><span class="line"></span><br><span class="line">    [<span class="built_in">NSLayoutConstraint</span> constraintWithItem:view1</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeLeft</span></span><br><span class="line">                                 relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                    toItem:superview</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeLeft</span></span><br><span class="line">                                multiplier:<span class="number">1.0</span></span><br><span class="line">                                  constant:padding.left],</span><br><span class="line"></span><br><span class="line">    [<span class="built_in">NSLayoutConstraint</span> constraintWithItem:view1</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                 relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                    toItem:superview</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeBottom</span></span><br><span class="line">                                multiplier:<span class="number">1.0</span></span><br><span class="line">                                  constant:-padding.bottom],</span><br><span class="line"></span><br><span class="line">    [<span class="built_in">NSLayoutConstraint</span> constraintWithItem:view1</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeRight</span></span><br><span class="line">                                 relatedBy:<span class="built_in">NSLayoutRelationEqual</span></span><br><span class="line">                                    toItem:superview</span><br><span class="line">                                 attribute:<span class="built_in">NSLayoutAttributeRight</span></span><br><span class="line">                                multiplier:<span class="number">1</span></span><br><span class="line">                                  constant:-padding.right],</span><br><span class="line"></span><br><span class="line"> ]];</span><br></pre></td></tr></table></figure>
+<p>但是如果你使用 <strong>Masory</strong>，那么你只需要这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIEdgeInsets</span> padding = <span class="built_in">UIEdgeInsetsMake</span>(<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">[view1 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">    make.top.equalTo(superview.mas_top).with.offset(padding.top); <span class="comment">//with is an optional semantic filler</span></span><br><span class="line">    make.left.equalTo(superview.mas_left).with.offset(padding.left);</span><br><span class="line">    make.bottom.equalTo(superview.mas_bottom).with.offset(-padding.bottom);</span><br><span class="line">    make.right.equalTo(superview.mas_right).with.offset(-padding.right);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>还能这样：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[view1 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">    make.edges.equalTo(superview).with.insets(padding);</span><br><span class="line">&#125;];[view1 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">    make.edges.equalTo(superview).with.insets(padding);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>我就问你，这么简单的语法，明明白白的语义，你入不入坑？</p>
+<h2 id="Masory-简单原理"><a href="#Masory-简单原理" class="headerlink" title="Masory 简单原理"></a>Masory 简单原理</h2><p><a href="https://github.com/SnapKit/Masonry" target="_blank" rel="external"><strong>Masory</strong> 源码</a></p>
+<p><strong>Masory</strong> 的核心还是 <strong>Autolayout</strong>，通过编写 UIView 的分类（<strong>category</strong>）— <strong>View+MASAdditions</strong>。为我们正常使用的 UIView 添加了新的API。再使用 block 来进行布局定义，交付类 <strong>MASConstraintMaker</strong> 来进行管理。</p>
+<p>说白了，就是把 <strong>Autolayout</strong> 进行封装和人性化。定义最最“弱智”的接口给我们用。</p>
+<p>相当于把红楼梦拍成动画片。哈哈~</p>
+<p>具体的实现还是要看源码啊~</p>
+<h2 id="Masory-的使用"><a href="#Masory-的使用" class="headerlink" title="Masory 的使用"></a>Masory 的使用</h2><h3 id="Masory-与-Autolayout-的对应关系"><a href="#Masory-与-Autolayout-的对应关系" class="headerlink" title="Masory 与 Autolayout 的对应关系"></a>Masory 与 Autolayout 的对应关系</h3><table>
+<thead>
+<tr>
+<th>Masonry</th>
+<th>NSAutoLayout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>view.mas_left</td>
+<td>NSLayoutAttributeLeft</td>
+</tr>
+<tr>
+<td>view.mas_right</td>
+<td>NSLayoutAttributeRight</td>
+</tr>
+<tr>
+<td>view.mas_top</td>
+<td>NSLayoutAttributeTop</td>
+</tr>
+<tr>
+<td>view.mas_bottom</td>
+<td>NSLayoutAttributeBottom</td>
+</tr>
+<tr>
+<td>view.mas_leading</td>
+<td>NSLayoutAttributeLeading</td>
+</tr>
+<tr>
+<td>view.mas_trailing</td>
+<td>NSLayoutAttributeTrailing</td>
+</tr>
+<tr>
+<td>view.mas_width</td>
+<td>NSLayoutAttributeWidth</td>
+</tr>
+<tr>
+<td>view.mas_height</td>
+<td>NSLayoutAttributeHeight</td>
+</tr>
+<tr>
+<td>view.mas_centerX</td>
+<td>NSLayoutAttributeCenterX</td>
+</tr>
+<tr>
+<td>view.mas_centerY</td>
+<td>NSLayoutAttributeCenterY</td>
+</tr>
+<tr>
+<td>view.mas_baseline</td>
+<td>NSLayoutAttributeBaseline</td>
+</tr>
+</tbody>
+</table>
+<h3 id="基础-–-居中显示一个view"><a href="#基础-–-居中显示一个view" class="headerlink" title="基础 – 居中显示一个view"></a>基础 – 居中显示一个view</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *greenView = <span class="built_in">UIView</span>.new;</span><br><span class="line">    greenView.backgroundColor = <span class="built_in">UIColor</span>.greenColor;</span><br><span class="line">    greenView.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">    greenView.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">    [<span class="keyword">self</span> addSubview:greenView];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIView</span> *superview = <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">    [greenView makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">        <span class="comment">//确定view的中心点与父级的view中心点相同</span></span><br><span class="line">        make.center.equalTo(superview);</span><br><span class="line">        <span class="comment">//确定view的宽和高</span></span><br><span class="line">        make.size.mas_equalTo(<span class="built_in">CGSizeMake</span>(<span class="number">300</span>, <span class="number">300</span>));</span><br><span class="line">        </span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+<p>代码效果：<br><img src="" alt=""></p>
+<p>补充：</p>
+<p>在使用 <strong>masonry</strong> 的项目里面我们会看到 <code>mas_equalTo</code> 和 <code>equalTo</code> 是混合使用的，其实，二者还是有一定的区别的:</p>
+<p><strong>其实 mas_equalTo是一个MACRO</strong>.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#define mas_equalTo(...)                 equalTo(MASBoxValue((__VA_ARGS__)))</span></span><br><span class="line"><span class="meta">#define mas_greaterThanOrEqualTo(...)    greaterThanOrEqualTo(MASBoxValue((__VA_ARGS__)))</span></span><br><span class="line"><span class="meta">#define mas_lessThanOrEqualTo(...)       lessThanOrEqualTo(MASBoxValue((__VA_ARGS__)))</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#define mas_offset(...)                  valueOffset(MASBoxValue((__VA_ARGS__)))</span></span><br></pre></td></tr></table></figure>
+<p>可以看到 <strong>mas_equalTo</strong> 只是对其参数进行了一个BOX操作(装箱) <strong>MASBoxValue</strong> 的定义具体可以看看源代码.</p>
+<p><strong> 所支持的类型 除了 NSNumber支持的那些数值类型之外 就只支持CGPoint CGSize UIEdgeInsets.
+</strong></p>
+<h3 id="初级-–-让一个view略小于其superView"><a href="#初级-–-让一个view略小于其superView" class="headerlink" title="初级 – 让一个view略小于其superView"></a>初级 – 让一个view略小于其superView</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *greenView = <span class="built_in">UIView</span>.new;</span><br><span class="line">    greenView.backgroundColor = <span class="built_in">UIColor</span>.greenColor;</span><br><span class="line">    greenView.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">    greenView.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">    [<span class="keyword">self</span> addSubview:greenView];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIView</span> *redView = <span class="built_in">UIView</span>.new;</span><br><span class="line">    redView.backgroundColor = <span class="built_in">UIColor</span>.redColor;</span><br><span class="line">    redView.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">    redView.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">    [greenView addSubview:redView];</span><br><span class="line"></span><br><span class="line">	<span class="built_in">UIView</span> *superview = <span class="keyword">self</span>;</span><br><span class="line">	<span class="built_in">CGFloat</span> padding = <span class="number">10.</span>f;</span><br><span class="line"> </span><br><span class="line">    [greenView makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">        make.center.equalTo(superview);</span><br><span class="line">        make.size.mas_equalTo(<span class="built_in">CGSizeMake</span>(<span class="number">300</span>, <span class="number">300</span>));</span><br><span class="line">        </span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    [redView mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">        </span><br><span class="line">        make.top.equalTo(greenView).with.offset(padding);</span><br><span class="line">        make.left.equalTo(greenView).with.offset(padding);</span><br><span class="line">        make.bottom.equalTo(greenView).with.offset(-padding);</span><br><span class="line">        make.right.equalTo(greenView).with.offset(-padding);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/* 也等价于         make.top.left.bottom.and.right.equalTo(greenView).with.insets(UIEdgeInsetsMake(padding, padding, padding, padding));</span><br><span class="line">         */</span></span><br><span class="line">    &#125;];</span><br></pre></td></tr></table></figure>
+<p>代码效果：<br><img src="" alt=""></p>
+<p>补充：</p>
+<p>top,left,bottom,righ计算的是绝对的数值，计算的bottom 需要小于sv的底部高度 所以要-10 同理用于right。</p>
+<h3 id="初级-–-让两个高度一定的view垂直居中且等宽且等间隔排列"><a href="#初级-–-让两个高度一定的view垂直居中且等宽且等间隔排列" class="headerlink" title="初级 – 让两个高度一定的view垂直居中且等宽且等间隔排列"></a>初级 – 让两个高度一定的view垂直居中且等宽且等间隔排列</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *greenView = <span class="built_in">UIView</span>.new;</span><br><span class="line">   greenView.backgroundColor = <span class="built_in">UIColor</span>.greenColor;</span><br><span class="line">   greenView.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">   greenView.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">  [<span class="keyword">self</span> addSubview:greenView];</span><br><span class="line">   </span><br><span class="line">   <span class="built_in">UIView</span> *redView1 = <span class="built_in">UIView</span>.new;</span><br><span class="line">   redView1.backgroundColor = <span class="built_in">UIColor</span>.redColor;</span><br><span class="line">   redView1.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">   redView1.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">   [greenView addSubview:redView1];</span><br><span class="line">   </span><br><span class="line">   <span class="built_in">UIView</span> *redView2 = <span class="built_in">UIView</span>.new;</span><br><span class="line">   redView2.backgroundColor = <span class="built_in">UIColor</span>.redColor;</span><br><span class="line">   redView2.layer.borderColor = <span class="built_in">UIColor</span>.blackColor.CGColor;</span><br><span class="line">   redView2.layer.borderWidth = <span class="number">2</span>;</span><br><span class="line">   [greenView addSubview:redView2];</span><br><span class="line">   </span><br><span class="line">   <span class="built_in">UIView</span> *superview = <span class="keyword">self</span>;</span><br><span class="line">   <span class="built_in">CGFloat</span> padding = <span class="number">10.</span>f;</span><br><span class="line">   </span><br><span class="line">   [greenView makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">       make.center.equalTo(superview);</span><br><span class="line">       make.size.mas_equalTo(<span class="built_in">CGSizeMake</span>(<span class="number">300</span>, <span class="number">300</span>));</span><br><span class="line">       </span><br><span class="line">   &#125;];</span><br><span class="line">   </span><br><span class="line">   [redView1 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">       </span><br><span class="line">       make.centerY.mas_equalTo(greenView.mas_centerY);</span><br><span class="line">       make.left.equalTo(greenView.mas_left).with.offset(padding);</span><br><span class="line">       make.right.equalTo(redView2.mas_left).with.offset(-padding);</span><br><span class="line">       make.width.equalTo(redView2.width);</span><br><span class="line">       make.height.mas_equalTo(@<span class="number">150</span>);</span><br><span class="line">   &#125;];</span><br><span class="line">   </span><br><span class="line">   [redView2 mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">       </span><br><span class="line">       make.centerY.mas_equalTo(greenView.mas_centerY);</span><br><span class="line">       make.right.equalTo(greenView.mas_right).with.offset(-padding);</span><br><span class="line">       make.left.equalTo(redView1.mas_right).with.offset(padding);</span><br><span class="line">       make.width.equalTo(redView1.width);</span><br><span class="line">       make.height.mas_equalTo(@<span class="number">150</span>);</span><br><span class="line"></span><br><span class="line">   &#125;];</span><br></pre></td></tr></table></figure>
+<p>代码效果：</p>
+<p><img src="" alt=""></p>
+<h3 id="中级-–-在UIScrollView顺序排列一些view并自动计算contentSize"><a href="#中级-–-在UIScrollView顺序排列一些view并自动计算contentSize" class="headerlink" title="中级 – 在UIScrollView顺序排列一些view并自动计算contentSize"></a>中级 – 在UIScrollView顺序排列一些view并自动计算contentSize</h3>
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/07/21/让Masonry来拯救你的AutoLayout/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
