@@ -16,16 +16,27 @@
     
     
 
-    <meta name="description" content="记录我的生活">
+    <meta name="description" content="前言看这篇博客之前，先安利一片文章《View Debugging in Xcode 6》，英文能力有限也没关系，译文：《详解Xcode 6的视图调试》。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS视图的层级结构 | Zen3’s blog">
 <meta property="og:url" content="http://yoursite.com/2016/07/27/iOS视图的层级结构/index.html">
 <meta property="og:site_name" content="Zen3’s blog">
-<meta property="og:description" content="记录我的生活">
-<meta property="og:updated_time" content="2016-07-27T07:40:56.000Z">
+<meta property="og:description" content="前言看这篇博客之前，先安利一片文章《View Debugging in Xcode 6》，英文能力有限也没关系，译文：《详解Xcode 6的视图调试》。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/1.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/3.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/4.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/5.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/6.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/7.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/8.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/9.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/10.png">
+<meta property="og:updated_time" content="2016-08-02T09:37:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS视图的层级结构 | Zen3’s blog">
-<meta name="twitter:description" content="记录我的生活">
+<meta name="twitter:description" content="前言看这篇博客之前，先安利一片文章《View Debugging in Xcode 6》，英文能力有限也没关系，译文：《详解Xcode 6的视图调试》。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/1.png">
     
     
     
@@ -213,6 +224,11 @@ classes that you can use:
           
 
           
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/UIWindow/">UIWindow</a>, <a class="tags-link" href="/tags/视图/">视图</a>
+            </font>
+          
 
       </span>
     </div>
@@ -222,7 +238,57 @@ classes that you can use:
   </header>
 
   <section id="post-content" class="article-content post">
-    
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看这篇博客之前，先安利一片文章<a href="https://www.raywenderlich.com/98356/view-debugging-in-xcode-6" target="_blank" rel="external">《View Debugging in Xcode 6》</a>，英文能力有限也没关系，译文：<a href="http://www.cocoachina.com/ios/20150423/11658.html" target="_blank" rel="external">《详解Xcode 6的视图调试》</a>。</p>
+<a id="more"></a>
+<h2 id="一句代码引起了我的注意"><a href="#一句代码引起了我的注意" class="headerlink" title="一句代码引起了我的注意"></a>一句代码引起了我的注意</h2><p>今天在看到别人的代码的时候，发现了下面这样一句代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].delegate.window addSubview:<span class="keyword">self</span>.shareView];</span><br></pre></td></tr></table></figure>
+<p>在 UIWindow 上面去添加视图（self.shareView）。</p>
+<p>自己写代码的习惯是会写成下面这种形式：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].delegate.window.rootViewController.view addSubview:<span class="keyword">self</span>.shareView];</span><br></pre></td></tr></table></figure>
+<p>添加到根控制器（rootViewController）的视图也是可以显示，和上面的代码有一样的效果，那他们究竟有什么样的区别呢？</p>
+<h2 id="视图层级"><a href="#视图层级" class="headerlink" title="视图层级"></a>视图层级</h2><h3 id="添加到window与添加到rootViewController-view的区别"><a href="#添加到window与添加到rootViewController-view的区别" class="headerlink" title="添加到window与添加到rootViewController.view的区别"></a>添加到window与添加到rootViewController.view的区别</h3><p>我们将两个相同的 <strong>UIImageView</strong> 添加到 <strong>window</strong> 和 <strong>rootViewController.view</strong>（rootViewController为<strong>UINavigationController</strong>）,push 一个新的 <strong>UIViewController</strong> 后，在 <code>viewDidLoad</code> 方法下运行：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIWindow</span> *window = [<span class="built_in">UIApplication</span> sharedApplication].delegate.window;</span><br><span class="line">    <span class="built_in">UIViewController</span> *rootViewController = [<span class="built_in">UIApplication</span> sharedApplication].delegate.window.rootViewController;</span><br><span class="line">    <span class="built_in">UIImageView</span> *imageView1 = [[<span class="built_in">UIImageView</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"IMG_3566.PNG"</span>]];</span><br><span class="line">    [imageView1 setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">70</span>, <span class="number">300</span>, <span class="number">200</span>)];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">UIImageView</span> *imageView2 = [[<span class="built_in">UIImageView</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@"IMG_3566.PNG"</span>]];</span><br><span class="line">    [imageView2 setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">300</span>, <span class="number">300</span>, <span class="number">200</span>)];</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    [window addSubview:imageView1];</span><br><span class="line">    [rootViewController.view addSubview:imageView2];</span><br></pre></td></tr></table></figure>
+<p>会有如下的效果：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/1.png" alt=""></p>
+<p>乍一看没有什么区别？如果没有区别，我写这博客干嘛呢，是吧？哈哈哈~</p>
+<h4 id="通过Xcode来观察他们的视图层级结构"><a href="#通过Xcode来观察他们的视图层级结构" class="headerlink" title="通过Xcode来观察他们的视图层级结构"></a>通过Xcode来观察他们的视图层级结构</h4><p>xcode  工作区点击以下这两步：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/2.png" alt=""></p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/3.png" alt=""></p>
+<p>可以看到如下的视图层级图：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/4.png" alt=""></p>
+<p> 左侧栏可以看出其层级结构：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/5.png" alt=""></p>
+<p>添加到 <strong>rootViewController.view</strong> 的 <strong>UIImageView</strong> 被添加到 <strong>UILayoutContainerView</strong> 底下。</p>
+<p>添加到 <strong>UIWindow</strong> 的 <strong>UIImageView</strong> 被添加到 <strong>UIWindow</strong> 底下。</p>
+<p>表象上看，两个 <strong>UIImageView</strong> 都是显示在视图的顶端，<strong>但是实际上层级结构不一样</strong>。</p>
+<h3 id="各个视图层级的作用"><a href="#各个视图层级的作用" class="headerlink" title="各个视图层级的作用"></a>各个视图层级的作用</h3><h4 id="UINavigationController-为-rootViewController"><a href="#UINavigationController-为-rootViewController" class="headerlink" title="UINavigationController 为 rootViewController"></a>UINavigationController 为 rootViewController</h4><p>我们看下面的这张图是：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/6.png" alt=""></p>
+<ol>
+<li><p>UILayoutContainerView：最底层包含所有视图的容器。</p>
+</li>
+<li><p>UINavigationTransitionView：导航控制器在这里发生转场行为的容器视图。</p>
+</li>
+<li><p>UIViewControllerWrapperView: 包含 viewController 的 view属性的封装视图。</p>
+</li>
+<li><p>UIView: viewController 的最上层视图 (与viewController的view 属性一致)</p>
+</li>
+</ol>
+<p>要记得，当我们通过 <strong>[UIApplication sharedApplication].delegate.window.rootViewController.view</strong>  去获取一个 <strong>View</strong>,即使 <strong>UINavigationController</strong> 没有push任何视图，你拿到还是最底层的 <strong>UILayoutContainerView</strong>。而不是 顶层的 <strong>UIView</strong>。</p>
+<h4 id="UITabBarController-为-rootViewController"><a href="#UITabBarController-为-rootViewController" class="headerlink" title="UITabBarController 为 rootViewController"></a>UITabBarController 为 rootViewController</h4><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/7.png" alt=""></p>
+<h4 id="UIViewController-为-rootViewController"><a href="#UIViewController-为-rootViewController" class="headerlink" title="UIViewController 为 rootViewController"></a>UIViewController 为 rootViewController</h4><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/8.png" alt=""></p>
+<h3 id="回到最初的起点"><a href="#回到最初的起点" class="headerlink" title="回到最初的起点"></a>回到最初的起点</h3><p>我们回到刚刚上面的两句代码，其实这两句代码都是有点小“问题”的：</p>
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].delegate.window addSubview:<span class="keyword">self</span>.shareView];</span><br></pre></td></tr></table></figure>
+<p>不能使用于 <strong>rootViewController</strong> 的 <strong>viewDidLoad</strong> 方法中。会出现以下这种情况：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/9.png" alt=""></p>
+<p>在 <strong>rootViewController</strong> 还没有加载完毕时，已经将视图添加到 <strong>UIWindow</strong> 中了，后面会因为 <strong>rootViewController</strong> 的加载而挡住原来的视图。</p>
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].delegate.window.rootViewController.view addSubview:<span class="keyword">self</span>.shareView];</span><br></pre></td></tr></table></figure>
+<p>在模态视图下不可使用，模态视图的出现会，销毁之前的我们 <strong>rootViewController.view</strong>，导致我们只能看到一闪而过的效果，view 不能长久的停留在屏幕上。</p>
+<h3 id="问题3"><a href="#问题3" class="headerlink" title="问题3"></a>问题3</h3><p>在 <strong>stackoverflow</strong>，当别人提起 <strong>UILayoutContainerView</strong> 时，很多的建议都是不要在上面做操作，因为他并非官方开放给开发者使用的接口。</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E8%A7%86%E5%9B%BE%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84/10.png" alt=""></p>
+<p>所以我们还是避免使用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication].delegate.window.rootViewController.view addSubview:<span class="keyword">self</span>.shareView];</span><br></pre></td></tr></table></figure>
+<p>自己要改掉该习惯。</p>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>关于 iOS 的视图层级，如果要更深入的去研究的话，还是推荐去官方文档翻一翻，可能显示的开发会跟这一块打交道的机会不是很多，但是要真正深入的去了解iOS的视图机制，还是属于要跨过去的坎。</p>
+
   </section>
 
   
