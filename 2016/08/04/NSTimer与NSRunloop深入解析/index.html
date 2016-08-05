@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      NSTimer与NSRunloop深入解析 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言以前在项目里面或多或少会接触一些 NSTimer ，比较常见的功能实现，像是点击按钮发送手机的验证码，为了不让用户重复点击发送短信，一般点击之后会用 NSTimer 来实现一个60s的倒计时，这就是 NSTimer 最基础的实践。但是其实 NSTimer 是一个深深的无底洞，没有你想的那么简单啊~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NSTimer与NSRunloop深入解析 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/08/04/NSTimer与NSRunloop深入解析/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言以前在项目里面或多或少会接触一些 NSTimer ，比较常见的功能实现，像是点击按钮发送手机的验证码，为了不让用户重复点击发送短信，一般点击之后会用 NSTimer 来实现一个60s的倒计时，这就是 NSTimer 最基础的实践。但是其实 NSTimer 是一个深深的无底洞，没有你想的那么简单啊~">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/1.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/3.PNG">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/2.png">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/IMG_3645.PNG">
+<meta property="og:updated_time" content="2016-08-05T07:07:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NSTimer与NSRunloop深入解析 | Zen3’s blog">
+<meta name="twitter:description" content="前言以前在项目里面或多或少会接触一些 NSTimer ，比较常见的功能实现，像是点击按钮发送手机的验证码，为了不让用户重复点击发送短信，一般点击之后会用 NSTimer 来实现一个60s的倒计时，这就是 NSTimer 最基础的实践。但是其实 NSTimer 是一个深深的无底洞，没有你想的那么简单啊~">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/1.png">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+<center><img alt='' style="width: 26%;height: 20%;border-radius: 6rem;border: 3px solid #fff;margin-bottom: 1.5em;" src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%85%B3%E4%BA%8E%E6%88%91/me.png"></center>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">NSTimer与NSRunloop深入解析</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-08-04" class="post-meta__date date">2016-08-04</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/NSRunLoop/">NSRunLoop</a>, <a class="tags-link" href="/tags/NSTimer/">NSTimer</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前在项目里面或多或少会接触一些 NSTimer ，比较常见的功能实现，像是点击按钮发送手机的验证码，为了不让用户重复点击发送短信，一般点击之后会用 NSTimer 来实现一个60s的倒计时，这就是 NSTimer 最基础的实践。但是其实 NSTimer 是一个深深的无底洞，没有你想的那么简单啊~</p>
+<a id="more"></a>
+<h2 id="NSTimer"><a href="#NSTimer" class="headerlink" title="NSTimer"></a>NSTimer</h2><h3 id="什么是NSTimer"><a href="#什么是NSTimer" class="headerlink" title="什么是NSTimer"></a>什么是NSTimer</h3><p>官方给出解释是：</p>
+<blockquote>
+<p>A timer provides a way to perform a delayed action or a periodic action. The timer waits until a certain time interval has elapsed and then fires, sending a specified message to a specified object.</p>
+</blockquote>
+<p>翻译过来就是timer就是一个能在从现在开始的后面的某一个时刻或者周期性的执行我们指定的方法的对象。</p>
+<h3 id="NSTimer的简单使用"><a href="#NSTimer的简单使用" class="headerlink" title="NSTimer的简单使用"></a>NSTimer的简单使用</h3><h4 id="初始化方法"><a href="#初始化方法" class="headerlink" title="初始化方法"></a>初始化方法</h4><h5 id="自动加入currentRunLoop"><a href="#自动加入currentRunLoop" class="headerlink" title="自动加入currentRunLoop"></a>自动加入currentRunLoop</h5><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ scheduledTimerWithTimeInterval: (<span class="built_in">NSTimeInterval</span>) invocation: (nonnull <span class="built_in">NSInvocation</span> *) repeats: (<span class="built_in">BOOL</span>)</span><br><span class="line">+ scheduledTimerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>) target:(nonnull <span class="keyword">id</span>) selector:(nonnull SEL) userInfo:(nullable <span class="keyword">id</span>) repeats:(<span class="built_in">BOOL</span>)</span><br></pre></td></tr></table></figure>
+<p>这两个是创建一个定时器，<strong>并加入到当前运行循环中</strong>，即我们可以这样去理解，这样初始化一个定时器时，在(NSTimeInterval)seconds 时间之后，自动启动定时器。</p>
+<h5 id="手动加入currentRunLoop"><a href="#手动加入currentRunLoop" class="headerlink" title="手动加入currentRunLoop"></a>手动加入currentRunLoop</h5><p>而下面这两个方法则是需要自己手动加入循环：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ timerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>) invocation:(nonnull <span class="built_in">NSInvocation</span> *) repeats:(<span class="built_in">BOOL</span>)</span><br><span class="line">+ timerWithTimeInterval:(<span class="built_in">NSTimeInterval</span>) target:(nonnull <span class="keyword">id</span>) selector:(nonnull SEL) userInfo:(nullable <span class="keyword">id</span>) repeats:(<span class="built_in">BOOL</span>)</span><br></pre></td></tr></table></figure>
+<p>官方文档是这么说滴：</p>
+<blockquote>
+<p>class method to create the timer object without scheduling it on a run loop.after creating it, you must add the timer to a run loop manually by calling the addTimer:forMode: method of the corresponding NSRunLoop object.</p>
+</blockquote>
+<p> 所以我们要执行下面的方法：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSRunLoop</span> *runloop=[<span class="built_in">NSRunLoop</span> currentRunLoop];</span><br><span class="line">[runloop addTimer: _timer forMode: <span class="built_in">NSDefaultRunLoopMode</span>];</span><br></pre></td></tr></table></figure>
+<p> 手动加入 <strong>currentRunLoop</strong> 与自动加入 <strong>currentRunLoop</strong> 的效果是一模一样的！</p>
+<p> 而关于什么是 <strong>NSRunLoop</strong> 什么是 <strong>NSDefaultRunLoopMode</strong>，下面我会详细写，这里先留一个坑。</p>
+<h4 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- invalidate</span><br><span class="line">- fire</span><br><span class="line">- isValid  <span class="comment">//是否在运行</span></span><br><span class="line">- timeInterval	<span class="comment">//定时器延时时间</span></span><br><span class="line">- userInfo <span class="comment">//其他信息</span></span><br><span class="line">- setFireDate: <span class="comment">//重新设置定时器开始运行的时间</span></span><br></pre></td></tr></table></figure>
+<p>其中必须注意的两方法是 <code>invalidate</code> 和 <code>fire</code>。</p>
+<p>我们的惯用代码：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>) <span class="built_in">NSTimer</span> *timer;</span><br><span class="line"><span class="comment">//开始按钮，响应的action</span></span><br><span class="line">- (<span class="keyword">IBAction</span>)startTime:(<span class="keyword">id</span>)sender;</span><br><span class="line"><span class="comment">//暂停按钮响应的action</span></span><br><span class="line">- (<span class="keyword">IBAction</span>)stopTime:(<span class="keyword">id</span>)sender;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)startTime:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="keyword">if</span>(!_timer) &#123;</span><br><span class="line">    	_timer=[<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">1.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timerAction:) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>]; </span><br><span class="line">    	[_timer fire]; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)stopTime:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="keyword">if</span> (_timer) &#123;</span><br><span class="line">        <span class="keyword">if</span> ([<span class="keyword">self</span>.timer isValid]) &#123;</span><br><span class="line">            [<span class="keyword">self</span>.timer invalidate];</span><br><span class="line">           _timer=<span class="literal">nil</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>所以有人会以为 <strong>fire</strong> 是 <strong>NSTimer</strong> 的启动方法，而 <strong>invalidate</strong> 是 <strong>NSTimer</strong> 的暂停方法。</p>
+<p>其实不然。</p>
+<p>还是看看官方文档是怎么说的吧：</p>
+<blockquote>
+<ul>
+<li><strong>fire</strong>：You can use this method to fire a repeating timer without interrupting its regular firing schedule. If the timer is non-repeating, it is automatically invalidated after firing, even if its scheduled fire date has not arrived.</li>
+<li><strong>invalidate</strong>：This method is the only way to remove a timer from an NSRunLoop object. The NSRunLoop object removes and releases the timer, either just before the invalidate method returns or at some later point.</li>
+</ul>
+</blockquote>
+<p>所以。</p>
+<p><code>fire</code> 不是启动一个 <strong>NSTimer</strong>，它只是提前触发定时器，而不影响之前的那个定时器设置的时间。如果我们设置的 <strong>NSTimer</strong> 的 <strong>repeats: YES</strong>，则时间到时，还是会重复执行方法。当我们把它改为 <strong>NO</strong> 之后，<strong>fire</strong> 触发一次之后，该 <strong>NSTimer</strong> 就被自动销毁了，以后再 <strong>fire</strong> 也不会触发了.</p>
+<p><code>invalidate</code> 这是唯一一个把一个定时器从一个运行循环中移除的方法。<strong>NSRunLoop</strong> object 这个对象移除，并且release掉这个的定时器，或者是在这个invalidate方法返回的之前或是在之后的某个时间段，再进行移除并release操作。并不是说暂停 <strong>NSTimer</strong>。</p>
+<p>所以必须重视一点：</p>
+<p><strong>如果使用重复的 NSTimer 一定要有对应的 invalidate，否则Timer会一直存在，不会被销毁。</strong></p>
+<h3 id="NSTimer-是怎么管理对象生命周期的"><a href="#NSTimer-是怎么管理对象生命周期的" class="headerlink" title="NSTimer 是怎么管理对象生命周期的"></a>NSTimer 是怎么管理对象生命周期的</h3><p>一开始使用 <strong>NSTimer</strong> 时，不知道大家是不是会像我一样纳闷，它是如如何保证在未来的某个时刻触发指定的对象事件时，该对象事件是有效的？而不被提前销毁。</p>
+<p>自己写个例子其实就能知道，当一个对象被 <strong>NSTimer</strong> 使用时，只有等到 <strong>NSTimer</strong> 执行结束，才会调用对象的 <code>dealloc</code> 方法。也就是说，对象只有在在 <strong>NSTimer</strong> 被销毁是才释放。</p>
+<p>所以，<strong>NSTimner</strong> 是对对象做了 <code>retain</code> 操作，这是运用了 <strong>Objective—C</strong> 的内存管理。<strong>不管是重复性的 timer 还是一次性的 time r都会对它的方法的接收者进行retain。</strong></p>
+<p>区别在于：<strong>一次性的timer在完成调用以后会自动将自己invalidate，而重复的timer则将永生，直到你显示的invalidate它为止</strong>。</p>
+<h3 id="NSTime-的实时性"><a href="#NSTime-的实时性" class="headerlink" title="NSTime 的实时性"></a>NSTime 的实时性</h3><p>我们写一个小例子：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSTimer</span> *timer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.timer = [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">2.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timerAction:) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</span><br><span class="line">    <span class="comment">//3秒后假装主线程很忙</span></span><br><span class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(simulateBusy) withObject:<span class="literal">nil</span> afterDelay:<span class="number">3</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)timerAction:(<span class="built_in">NSTimer</span>*)timer &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Hi, Timer Action for instance %@"</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)simulateBusy &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"start simulate busy!"</span>);</span><br><span class="line">    sleep(<span class="number">5</span>);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"finish simulate busy!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning &#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>看一下运行结果：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/1.png" alt=""></p>
+<p>从结果来分析：</p>
+<p>　　我添加了一个timer指定2秒后触发某一个事件，但是正好那个时候当前线程在执行一个耗时处理，这个时候 timer 就会延迟到该连续运算执行完以后才会执行。重复性的 timer 遇到这种情况，如果延迟超过了一个周期，则会和后面的触发进行合并，即在一个周期内只会触发一次。但是不管该timer的触发时间延迟的有多离谱，他后面的timer的触发时间总是倍数于第一次添加timer的间隙。<br>　　所以会我们这样的结果，在执行耗时操作的5秒中，本来每两秒执行一次的方法至少要执行两次，但是在耗时操作结束之后并没有立刻执行两次，而是继续按照原来的“节奏”，验证了我们上面说的。<br>　　　　<br><strong>So，</strong></p>
+<p>　　<strong>NSTimer</strong> 不是一个实时系统，因此不管是一次性的还是周期性的 timer 的实际触发事件的时间可能都会跟我们预想的会有出入。</p>
+<p>差距的大小跟当前我们程序的执行情况有关系，比如可能程序是多线程的，而你的 timer 只是添加在某一个线程的 <strong>runloop</strong> 的某一种指定的 <strong>runloopmode</strong> 中，由于多线程通常都是分时执行的，而且每次执行的mode也可能随着实际情况发生变化。</p>
+<h2 id="NSRunLoop"><a href="#NSRunLoop" class="headerlink" title="NSRunLoop"></a>NSRunLoop</h2><p>上面我们已经提起了 <strong>NSRunloop</strong> 了，它与 <strong>NSTimer</strong> 息息相关。</p>
+<h3 id="什么是NSRunLoop"><a href="#什么是NSRunLoop" class="headerlink" title="什么是NSRunLoop"></a>什么是NSRunLoop</h3><p>runLoop是一个与线程相关的机制。</p>
+<p>在应用程序层面，无论在哪个操作系统，所有线程的运行方式基本是一样的。在线程开始运行后,都在 running, ready, 或是 blocked状态中切换，直至终止。在创建一个新的线程的时候，我们必须指定入口函数（entry-point function）。当入口函数执行完毕或是我们主动终止线程，线程就会停止运行然后被系统回收。</p>
+<p>如果任务执行完毕，线程就被回收，那么下一个新的任务来，我们还需要重新创建和配置一个线程。非常地消耗性能，这个时候就引出了我们的 <strong>RunLoop</strong> 机制。用 <strong>RunLoop</strong> 来实现线程的常驻。</p>
+<p>Runloop可以简单理解为一个循环。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func loop() &#123;</span><br><span class="line">    repeat &#123;</span><br><span class="line">        var event = nextEvent();</span><br><span class="line">        process(event);</span><br><span class="line">    &#125; <span class="keyword">while</span> (event != quit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个循环里面等待事件，然后处理事件。而这个循环是基于线程的。 通过 <strong>RunLoop</strong> 这样的机制，线程能够在没有事件需要处理的时候休息，有事情的时候运行。减轻CPU压力。</p>
+<h3 id="为什么说NSTimer与NSRunLoop息息相关"><a href="#为什么说NSTimer与NSRunLoop息息相关" class="headerlink" title="为什么说NSTimer与NSRunLoop息息相关"></a>为什么说NSTimer与NSRunLoop息息相关</h3><p>因为！<strong>NSTimer 必须添加到 NSRunLoop 才能生效</strong>！</p>
+<p>我们上面在使用 <strong>NSTimner</strong> 时的手动添加就是实现这么一个过程。</p>
+<p>自动添加，它其实是做了两件事：首先创建一个 timer，然后将该 timer 添加到当前runloop 的 default mode 中。也就是这个便利方法给我们造成了只要创建了timer就可以生效的错觉。</p>
+<p>　　<strong>NSTimer</strong> 其实也是一种资源，如果看过多线程变成指引文档的话，我们会发现所有的 <strong>source</strong> 如果要起作用，就得加到 <strong>runloop</strong> 中去。同理 <strong>timer</strong> 这种资源要想起作用，那肯定也需要加到<strong>runloop</strong> 中才会生效。如果一个 <strong>runloop</strong> 里面不包含任何资源的话，运行该 <strong>runloop</strong> 时会立马退出。你可能会说那我们APP的主线程的 <strong>runloop</strong> 我们没有往其中添加任何资源，为什么它还好好的运行。我们不添加，不代表框架没有添加，如果有兴趣的话你可以打印一下 <strong>main thread</strong> 的 <strong>runloop</strong>，你会发现有很多资源。 
+　　</p>
+<h2 id="生活处处有“惊喜”"><a href="#生活处处有“惊喜”" class="headerlink" title="生活处处有“惊喜”"></a>生活处处有“惊喜”</h2><p>你有没有遇到：</p>
+<p>你初始化一个 <strong>NSTimner</strong> 并添加到 <strong>runloop</strong>，但是呢，它很调皮，就是怎么样都不去执行？</p>
+<p>反正我是遇到过。</p>
+<p>以前的项目里就有一个类似前言我所说的需求：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/3.PNG" alt=""></p>
+<p>我自己测试的时候一点问题，都没有，但是由于它的本质是一个 <strong>UIScrollView</strong>,当它滑动时，计时器会停止。当看到计时器骤停，我TM的心脏也快要骤停了好伐？</p>
+<p>究其原因：</p>
+<p>能让 <strong>NSTimer</strong> 停下的原因无非两个：</p>
+<h3 id="runloop-没有运行"><a href="#runloop-没有运行" class="headerlink" title="runloop 没有运行"></a><strong>runloop 没有运行</strong></h3><p> 每一个线程都有它自己的 <strong>runloop</strong>，程序的主线程会自动的使<strong>runloop</strong> 生效，这也是我们前面那么多的例子都没有运行 <strong>runloop</strong> 的原因，<strong>因为我们默认当前线程是主线程</strong>；但对于我们自己新建的线程，它的 <strong>runloop</strong> 是不会自己运行起来，当我们需要使用它的 <strong>runloop</strong> 时，就得自己启动。</p>
+<p> 参考以下代码：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">#import <span class="meta-string">"ViewController.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    [<span class="built_in">NSThread</span> detachNewThreadSelector:<span class="keyword">@selector</span>(testTimerSheduleToRunloop1) toTarget:<span class="keyword">self</span> withObject:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)timerAction:(<span class="built_in">NSTimer</span>*)timer &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Hi, Timer Action for instance %@"</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)testTimerSheduleToRunloop1</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Test timer shedult to a non-running runloop"</span>);</span><br><span class="line">    <span class="built_in">NSTimer</span> *timer = [[<span class="built_in">NSTimer</span> alloc] initWithFireDate:[<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">1</span>] interval:<span class="number">1</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timerAction:) userInfo:<span class="literal">nil</span> repeats:<span class="literal">NO</span>];</span><br><span class="line">    [[<span class="built_in">NSRunLoop</span> currentRunLoop] addTimer:timer forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"the thread's runloop: %@"</span>, [<span class="built_in">NSRunLoop</span> currentRunLoop]);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 打开下面一行, 该线程的runloop就会运行起来，timer才会起作用</span></span><br><span class="line">    <span class="comment">//[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)didReceiveMemoryWarning &#123;</span><br><span class="line">    [<span class="keyword">super</span> didReceiveMemoryWarning];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p> 运行后我们可以从控制台看出，<strong>timer</strong> 已经添加进去了：</p>
+<p> <img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/2.png" alt=""></p>
+<p> 但是由于没有运行这一句代码：</p>
+ <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSRunLoop</span> currentRunLoop] runUntilDate:[<span class="built_in">NSDate</span> dateWithTimeIntervalSinceNow:<span class="number">3</span>]]</span><br></pre></td></tr></table></figure>
+<p> 而导致 <strong>NSTimer</strong> 没有生效。</p>
+<h3 id="mode-的问题"><a href="#mode-的问题" class="headerlink" title="mode 的问题"></a>mode 的问题</h3><p><strong>mode</strong> 的问题也正是我滑动 <strong>scrollerView</strong>， <strong>timer</strong> 停止的原因。</p>
+<p>提到mode,就需要谈谈 <strong>RunLoop Modes</strong>。</p>
+<p>简单的说，<strong>runLoop</strong> 有多个 <strong>Mode</strong>,<strong>RunLoop</strong> 只能运行一个 <strong>Mode</strong>,<strong>RunLoop</strong> 只会处理它当前 <strong>Mode</strong> 的事件。</p>
+<p>所以就会导致一些地方我们需要去注意。</p>
+<p>一般 timer 是运行在 <strong>RunLoop</strong> 的 <strong>default mode</strong> 上，而<strong>ScrollView</strong> 在用户滑动时（主线程需要去刷新UI），主线程 <strong>RunLoop</strong> 会转到 <strong>UITrackingRunLoopMode</strong>。而这个时候，<strong>Timer</strong> 就不会运行,方法得不到 <strong>fire</strong>。</p>
+<p>主要有两个方法解决：</p>
+<p>方法一：我们在另外一个线程执行和处理 <strong>Timer</strong> 事件，然后在主线程更新UI。</p>
+<p>我个人还是更为推荐方法二，不需要再去新建线程，给CPU无谓的压力。</p>
+<p>方法二：</p>
+<p>设置 <strong>RunLoop Mode</strong>，例如 <strong>NSTimer</strong>,我们指定它运行于<strong>NSRunLoopCommonModes</strong>,这是一个 <strong>Mode</strong> 的集合。注册到这个 <strong>Mode</strong> 下后，无论当前 <strong>RunLoop</strong> 运行哪个 <strong>mode</strong>,事件都能得到执行。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSTimer</span> *timer = [<span class="built_in">NSTimer</span> timerWithTimeInterval:<span class="number">2.0</span> target:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(timerAction:) userInfo:<span class="literal">nil</span> repeats:<span class="literal">YES</span>];</span><br><span class="line">    <span class="comment">//使用NSRunLoopCommonModes模式，把timer加入到当前Run Loop中。</span></span><br><span class="line">    [[<span class="built_in">NSRunLoop</span> currentRunLoop] addTimer:timer forMode:<span class="built_in">NSRunLoopCommonModes</span>];</span><br></pre></td></tr></table></figure>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>写这篇博客的时候，还是有一点点感悟的，去年我在写登录页面的时候，不知道为什么会计时骤停，直接把滑动给禁止了。虽然也解决了这个BUG，但是现在想想还是觉得当时自己的这种学习态度不是特别好啊。怎么样也要做一个比较有追求的coder嘛！</p>
+<p>祭上今天看到的一张图：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/runloop/IMG_3645.PNG" alt=""></p>
+<p>希望大家膝盖没有很疼！</p>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/08/04/NSTimer与NSRunloop深入解析/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
