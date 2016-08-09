@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      源码分享：webview的goback过渡 | Zen3’s blog 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zen3">
+    
+    
+
+    <meta name="description" content="前言在iOS7之后，我们可能已经习惯了使用屏幕左边沿向右滑来返回上一级的页面。从开发的角度来说就是将当前的 viewController 从 navigation 的栈中 pop出来。那如果我们将这个使用习惯保留到一个带 webview 的 viewController 中，也许我们的右滑只是为了退回到网页的上一级，并非是要退出当前的页面。这篇博客主要讲的就是这的实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分享：webview的goback过渡 | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/08/09/源码分享：webview的goback过渡/index.html">
+<meta property="og:site_name" content="Zen3’s blog">
+<meta property="og:description" content="前言在iOS7之后，我们可能已经习惯了使用屏幕左边沿向右滑来返回上一级的页面。从开发的角度来说就是将当前的 viewController 从 navigation 的栈中 pop出来。那如果我们将这个使用习惯保留到一个带 webview 的 viewController 中，也许我们的右滑只是为了退回到网页的上一级，并非是要退出当前的页面。这篇博客主要讲的就是这的实现。">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/Safari.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/wechat.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/me.gif">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/IMG_3584.JPG">
+<meta property="og:updated_time" content="2016-08-09T15:34:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码分享：webview的goback过渡 | Zen3’s blog">
+<meta name="twitter:description" content="前言在iOS7之后，我们可能已经习惯了使用屏幕左边沿向右滑来返回上一级的页面。从开发的角度来说就是将当前的 viewController 从 navigation 的栈中 pop出来。那如果我们将这个使用习惯保留到一个带 webview 的 viewController 中，也许我们的右滑只是为了退回到网页的上一级，并非是要退出当前的页面。这篇博客主要讲的就是这的实现。">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/Safari.gif">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+<center><img alt='' style="width: 26%;height: 20%;border-radius: 6rem;border: 3px solid #fff;margin-bottom: 1.5em;" src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/%E5%85%B3%E4%BA%8E%E6%88%91/me.png"></center>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">Zen3’s blog</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          Be a Mr.Curiosity for coding.
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/lzcuriosity" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+   
+      <!-- Instagram -->
+      <li class="navigation__item">
+        <a href="https://www.instagram.com/lzcuriosity" title="Huno on Instagram">
+          <i class='icon icon-social-instagram'></i>
+          <span class="label">Instagram </span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">源码分享：webview的goback过渡</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-08-09" class="post-meta__date date">2016-08-09</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/WebView/">WebView</a>, <a class="tags-link" href="/tags/iOS/">iOS</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在iOS7之后，我们可能已经习惯了使用屏幕左边沿向右滑来返回上一级的页面。从开发的角度来说就是将当前的 <strong>viewController</strong> 从 <strong>navigation</strong> 的栈中 <strong>pop</strong>出来。那如果我们将这个使用习惯保留到一个带 <strong>webview</strong> 的 <strong>viewController</strong> 中，也许我们的右滑只是为了退回到网页的上一级，并非是要退出当前的页面。这篇博客主要讲的就是这的实现。<br><a id="more"></a></p>
+<h2 id="需要的完成的效果"><a href="#需要的完成的效果" class="headerlink" title="需要的完成的效果"></a>需要的完成的效果</h2><p>像iOS自带的Safari，或者微信内置的浏览器，都是实现了这样的功能的：<br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/Safari.gif" alt=""><br><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/wechat.gif" alt=""></p>
+<h2 id="实现的主要原理"><a href="#实现的主要原理" class="headerlink" title="实现的主要原理"></a>实现的主要原理</h2><h3 id="边缘滑动"><a href="#边缘滑动" class="headerlink" title="边缘滑动"></a>边缘滑动</h3><p>我们右滑退出主要是有两种：</p>
+<ul>
+<li>只用从屏幕边沿滑动触发</li>
+<li>从任意位置右滑触发</li>
+</ul>
+<p>显然，第一种是比较符合 iOS 的设计理念的，防止用户误滑。在iOS7之前，navigation 的右滑退出需要自己去实现，所以到现在还是有很多app的设计是沿用以前的任意位置滑动退出。比如新浪微博，在你看长微博时，很容易因为上滑而误触发右滑，这种体验是在一般。所以我们采用第一种。<br>来进行<strong>webview</strong>网页的回退，以及如果页面已经是根页面时，直接 <strong>pop</strong> 该 <strong>viewController</strong>。</p>
+<h4 id="网页的回退"><a href="#网页的回退" class="headerlink" title="网页的回退"></a>网页的回退</h4><p>iOS7之后，我们可以使用 <strong>UIScreenEdgePanGestureRecognizer</strong> 手势来识别从屏幕边沿滑动的手势：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIScreenEdgePanGestureRecognizer</span> *popGesture = [[<span class="built_in">UIScreenEdgePanGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(panGesture:)];</span><br><span class="line">[popGesture setEdges:<span class="built_in">UIRectEdgeLeft</span>];</span><br><span class="line">[<span class="keyword">self</span> addGestureRecognizer:popGesture];</span><br></pre></td></tr></table></figure>
+<h4 id="pop-viewController"><a href="#pop-viewController" class="headerlink" title="pop viewController"></a>pop viewController</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">LZWebViewController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">id</span> navPanTarget;</span><br><span class="line">    SEL navPanAction;</span><br><span class="line">    IMP imp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</span><br><span class="line">    [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">    [<span class="keyword">self</span>.view setBackgroundColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">    <span class="comment">// 获取系统默认手势Handler并创建与之相同的手势</span></span><br><span class="line">    <span class="built_in">NSMutableArray</span> *gestureTargets = [<span class="keyword">self</span>.navigationController.interactivePopGestureRecognizer valueForKey:<span class="string">@"targets"</span>];</span><br><span class="line">    <span class="keyword">id</span> gestureTarget = [gestureTargets firstObject];</span><br><span class="line">    navPanTarget = [gestureTarget valueForKey:<span class="string">@"target"</span>];</span><br><span class="line">    navPanAction = <span class="built_in">NSSelectorFromString</span>(<span class="string">@"handleNavigationTransition:"</span>);</span><br><span class="line">    <span class="keyword">if</span> (navPanTarget &amp;&amp; [navPanTarget respondsToSelector:navPanAction]) &#123;</span><br><span class="line">        imp =[navPanTarget methodForSelector:navPanAction];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGFloat</span> width = [<span class="built_in">UIScreen</span> mainScreen].bounds.size.width;</span><br><span class="line">    <span class="built_in">CGFloat</span> height = [<span class="built_in">UIScreen</span> mainScreen].bounds.size.height;</span><br><span class="line">    LZWebView *webView = [[LZWebView alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, width,height)];</span><br><span class="line">    webView.lzPanWebViewDelegate = <span class="keyword">self</span>;</span><br><span class="line">    [webView loadRequest:[<span class="built_in">NSURLRequest</span> requestWithURL:[<span class="built_in">NSURL</span> URLWithString:<span class="keyword">self</span>.url]]];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:webView];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)LZWebView:(LZWebView *)webView panPopGesture:(<span class="built_in">UIPanGestureRecognizer</span> *)pan &#123;</span><br><span class="line">    <span class="keyword">if</span> (imp) &#123;</span><br><span class="line">        <span class="keyword">void</span> (*func)(<span class="keyword">id</span>, SEL, <span class="built_in">UIPanGestureRecognizer</span>*) = (<span class="keyword">void</span> *)imp;</span><br><span class="line">        func(navPanTarget, navPanAction,pan);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一个小插曲，<br>之前我是使用这样的方法调用：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[navPanTarget performSelector:navPanAction withObject:pan];</span><br></pre></td></tr></table></figure>
+<p>编译器会警告我们：</p>
+<blockquote>
+<p>PerformSelector may cause a leak because its selector is unknown</p>
+</blockquote>
+<p><a href="http://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown" target="_blank" rel="external">Stackoverflow解决相关链接</a></p>
+<p>大致了解了一下：</p>
+<p>在ARC模式下，运行时需要知道如何处理你正在调用的方法的返回值。这个返回值可以是任意值，如void,int,char,NSString,id等等。ARC通过头文件的函数定义来得到这些信息。所以平时我们用到的静态选择器就不会出现这个警告。因为在编译期间，这些信息都已经确定。<br>而使用[someController performSelector: NSSelectorFromString(@”someMethod”)];时ARC并不知道该方法的返回值是什么，以及该如何处理？该忽略？还是标记为ns_returns_retained还是ns_returns_autoreleased?</p>
+<p>所以会有编译警告。</p>
+<h3 id="goback-过渡"><a href="#goback-过渡" class="headerlink" title="goback 过渡"></a>goback 过渡</h3><p>我们使用 webview 的 <code>goback</code> API时，它是一个退回上一个网页的操作，会有闪烁的感觉。并且我们不可获取上一个页面的显示状况，那是怎么做出丝滑滑动的效果的呢？</p>
+<p>我们获取不到上一个页面的状态显示，但是我们可以在跳转到下一个页面之前截一张该页面的图。由于返回时的“伪装”。我细心把玩了微信，发现他也是这种实现原理。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> *  屏幕截图</span><br><span class="line"> */</span></span><br><span class="line">+ (<span class="built_in">UIImage</span> *)screenshotOfView:(<span class="built_in">UIView</span> *)view &#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(view.frame.size, <span class="literal">YES</span>, <span class="number">0.0</span>);</span><br><span class="line">    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:<span class="literal">YES</span>];</span><br><span class="line">    <span class="built_in">UIImage</span> *image = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> image;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> *  添加阴影效果</span><br><span class="line"> */</span></span><br><span class="line">+ (<span class="keyword">void</span>)addShadowToView:(<span class="built_in">UIView</span> *)view &#123;</span><br><span class="line">    <span class="built_in">CALayer</span> *layer = view.layer;</span><br><span class="line">    <span class="built_in">UIBezierPath</span> *path = [<span class="built_in">UIBezierPath</span> bezierPathWithRect:layer.bounds];</span><br><span class="line">    layer.shadowPath = path.CGPath;</span><br><span class="line">    layer.shadowColor = [<span class="built_in">UIColor</span> blackColor].CGColor;</span><br><span class="line">    layer.shadowOffset = <span class="built_in">CGSizeZero</span>;</span><br><span class="line">    layer.shadowOpacity = <span class="number">0.4</span>f;</span><br><span class="line">    layer.shadowRadius = <span class="number">8.0</span>f;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用一个数组来管理当前 webview 的页面层级关系。具体可以查看demo。</p>
+<h3 id="动画效果"><a href="#动画效果" class="headerlink" title="动画效果"></a>动画效果</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#pragma mark UIGestureDelegate</span></span><br><span class="line">- (<span class="keyword">void</span>)panGesture:(<span class="built_in">UIPanGestureRecognizer</span> *)sender &#123;</span><br><span class="line">    <span class="keyword">if</span> (![<span class="keyword">self</span> canGoBack] || historyStack.count == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">self</span>.lzPanWebViewDelegate &amp;&amp; [<span class="keyword">self</span>.lzPanWebViewDelegate respondsToSelector:<span class="keyword">@selector</span>(LZWebView:panPopGesture:)]) &#123;</span><br><span class="line">            [<span class="keyword">self</span>.lzPanWebViewDelegate LZWebView:<span class="keyword">self</span> panPopGesture:sender];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGPoint</span> translationPoint = [sender translationInView:<span class="keyword">self</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (sender.state == <span class="built_in">UIGestureRecognizerStateBegan</span>) &#123;</span><br><span class="line">        panStartX = translationPoint.x;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (sender.state == <span class="built_in">UIGestureRecognizerStateChanged</span>) &#123;</span><br><span class="line">        <span class="built_in">CGFloat</span> deltaX = translationPoint.x - panStartX;</span><br><span class="line">        <span class="keyword">if</span> (deltaX &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> ([<span class="keyword">self</span> canGoBack]) &#123;</span><br><span class="line">                assert([historyStack count] &gt; <span class="number">0</span>);</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">CGRect</span> rc = <span class="keyword">self</span>.frame;</span><br><span class="line">                rc.origin.x = deltaX;</span><br><span class="line">                <span class="keyword">self</span>.frame = rc;</span><br><span class="line">                [<span class="keyword">self</span> historyView].image = [[historyStack lastObject] objectForKey:<span class="string">@"preview"</span>];</span><br><span class="line">                rc.origin.x = -<span class="keyword">self</span>.bounds.size.width/<span class="number">2.0</span>f + deltaX/<span class="number">2.0</span>f;</span><br><span class="line">                [<span class="keyword">self</span> historyView].frame = rc;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sender.state == <span class="built_in">UIGestureRecognizerStateEnded</span>) &#123;</span><br><span class="line">        <span class="built_in">CGFloat</span> deltaX = translationPoint.x - panStartX;</span><br><span class="line">        <span class="built_in">CGFloat</span> duration = <span class="number">.5</span>f;</span><br><span class="line">        <span class="keyword">if</span> ([<span class="keyword">self</span> canGoBack]) &#123;</span><br><span class="line">            <span class="keyword">if</span> (deltaX &gt; <span class="keyword">self</span>.bounds.size.width/<span class="number">4.0</span>f) &#123;</span><br><span class="line">                [<span class="built_in">UIView</span> animateWithDuration:(<span class="number">1.0</span>f - deltaX/<span class="keyword">self</span>.bounds.size.width)*duration animations:^&#123;</span><br><span class="line">                    <span class="built_in">CGRect</span> rc = <span class="keyword">self</span>.frame;</span><br><span class="line">                    rc.origin.x = <span class="keyword">self</span>.bounds.size.width;</span><br><span class="line">                    <span class="keyword">self</span>.frame = rc;</span><br><span class="line">                    rc.origin.x = <span class="number">0</span>;</span><br><span class="line">                    [<span class="keyword">self</span> historyView].frame = rc;</span><br><span class="line">                &#125; completion:^(<span class="built_in">BOOL</span> finished) &#123;</span><br><span class="line">                    [<span class="keyword">self</span> goBack];</span><br><span class="line">                    <span class="built_in">CGRect</span> rc = <span class="keyword">self</span>.frame;</span><br><span class="line">                    rc.origin.x = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">self</span>.frame = rc;</span><br><span class="line">                    <span class="keyword">self</span>.alpha = <span class="number">0</span>;</span><br><span class="line">                &#125;];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                [<span class="built_in">UIView</span> animateWithDuration:(deltaX/<span class="keyword">self</span>.bounds.size.width)*duration animations:^&#123;</span><br><span class="line">                    <span class="built_in">CGRect</span> rc = <span class="keyword">self</span>.frame;</span><br><span class="line">                    rc.origin.x = <span class="number">0</span>;</span><br><span class="line">                    <span class="keyword">self</span>.frame = rc;</span><br><span class="line">                    rc.origin.x = -<span class="keyword">self</span>.bounds.size.width/<span class="number">2.0</span>f;</span><br><span class="line">                    [<span class="keyword">self</span> historyView].frame = rc;</span><br><span class="line">                &#125; completion:^(<span class="built_in">BOOL</span> finished) &#123;</span><br><span class="line">                &#125;];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="相关协议"><a href="#相关协议" class="headerlink" title="相关协议"></a>相关协议</h3><h4 id="LZPanWebViewDelegate"><a href="#LZPanWebViewDelegate" class="headerlink" title="LZPanWebViewDelegate"></a>LZPanWebViewDelegate</h4><p>当 webview 的页面不可再 goback 时，该协议中的方法:<br><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)LZWebView:(LZWebView *)webView panPopGesture:(<span class="built_in">UIPanGestureRecognizer</span> *)pan;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">会被回调。</span><br><span class="line"></span><br><span class="line"><span class="meta">#### webview 的 delegate</span></span><br><span class="line"></span><br><span class="line"><span class="meta">## 需要注意</span></span><br><span class="line"></span><br><span class="line">我们所定义的手势会与系统的 interactivePopGestureRecognizer 形成冲突。可以先行禁止系统的。如下：</span><br><span class="line"></span><br><span class="line">```objc</span><br><span class="line"><span class="keyword">self</span>.navigationController.interactivePopGestureRecognizer.enabled = <span class="literal">NO</span>;</span><br></pre></td></tr></table></figure></p>
+<p>建议是在 ：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewWillAppear:(<span class="built_in">BOOL</span>)animated &#123;</span><br><span class="line">    <span class="comment">//禁用iOS系统自带的navigation右滑返回</span></span><br><span class="line">    <span class="keyword">self</span>.navigationController.interactivePopGestureRecognizer.enabled = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) viewDidDisappear:(<span class="built_in">BOOL</span>)animated &#123;</span><br><span class="line">    <span class="comment">//启用iOS系统自带的navigation右滑返回</span></span><br><span class="line">    <span class="keyword">self</span>.navigationController.interactivePopGestureRecognizer.enabled = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>里添加。</p>
+<h2 id="最后的效果"><a href="#最后的效果" class="headerlink" title="最后的效果"></a>最后的效果</h2><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/me.gif" alt=""></p>
+<h2 id="demo地址"><a href="#demo地址" class="headerlink" title="demo地址"></a>demo地址</h2><p>详情还是要源码吧。</p>
+<p><a href="https://github.com/lzcuriosity/iOSWebViewGoBackWithTransitionAnimation" target="_blank" rel="external">iOSWebViewGoBackWithTransitionAnimation</a></p>
+<h2 id="最后的话"><a href="#最后的话" class="headerlink" title="最后的话"></a>最后的话</h2><p>今天是七夕~我看朋友圈，一整天都是以下这副表情：</p>
+<p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/goback/IMG_3584.JPG" alt=""></p>
+<p>祝天下有情人，终成兄妹~（除了我，哈哈哈）~</p>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/08/09/源码分享：webview的goback过渡/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
