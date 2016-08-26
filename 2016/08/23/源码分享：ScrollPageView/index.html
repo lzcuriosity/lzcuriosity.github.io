@@ -7,7 +7,7 @@
     
 
     <title>
-      归档 
+      源码分享：ScrollPageView | Zen3’s blog 
     </title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -16,16 +16,24 @@
     
     
 
-    <meta name="description" content="记录我的生活">
-<meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="http://yoursite.com/archive/index.html">
+    <meta name="description" content="前言这段时间很少写博客了，不是自己变懒惰是确实变得忙碌起来了。前一阵子做了很多旧项目代码迁移工作，发现当自己要完全去理解别人的代码做迁移难度可能要比自己去实现一个功能更为困难。
+这篇博客是前段时间自己因为需求开发的一个常用控件，是现在很多APP都会有可左滑右滑的切换顶栏。我写的大概就是这样的控件。
+原理其实github关于这一类型的开源其实不少，但是很多在当你有多个view，由于没有重用机制，会导">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分享：ScrollPageView | Zen3’s blog">
+<meta property="og:url" content="http://yoursite.com/2016/08/23/源码分享：ScrollPageView/index.html">
 <meta property="og:site_name" content="Zen3’s blog">
-<meta property="og:description" content="记录我的生活">
-<meta property="og:updated_time" content="2016-06-18T01:59:11.000Z">
+<meta property="og:description" content="前言这段时间很少写博客了，不是自己变懒惰是确实变得忙碌起来了。前一阵子做了很多旧项目代码迁移工作，发现当自己要完全去理解别人的代码做迁移难度可能要比自己去实现一个功能更为困难。
+这篇博客是前段时间自己因为需求开发的一个常用控件，是现在很多APP都会有可左滑右滑的切换顶栏。我写的大概就是这样的控件。
+原理其实github关于这一类型的开源其实不少，但是很多在当你有多个view，由于没有重用机制，会导">
+<meta property="og:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/scrollPageView/iu.gif">
+<meta property="og:updated_time" content="2016-08-26T10:37:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="归档">
-<meta name="twitter:description" content="记录我的生活">
+<meta name="twitter:title" content="源码分享：ScrollPageView | Zen3’s blog">
+<meta name="twitter:description" content="前言这段时间很少写博客了，不是自己变懒惰是确实变得忙碌起来了。前一阵子做了很多旧项目代码迁移工作，发现当自己要完全去理解别人的代码做迁移难度可能要比自己去实现一个功能更为困难。
+这篇博客是前段时间自己因为需求开发的一个常用控件，是现在很多APP都会有可左滑右滑的切换顶栏。我写的大概就是这样的控件。
+原理其实github关于这一类型的开源其实不少，但是很多在当你有多个view，由于没有重用机制，会导">
+<meta name="twitter:image" content="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/scrollPageView/iu.gif">
     
     
     
@@ -201,116 +209,67 @@ classes that you can use:
 
   <header class="post-header">
     
-    <h1 class="post-title">归档</h1>
+    <h1 class="post-title">源码分享：ScrollPageView</h1>
 
-    <section id="post-content" class="article-content post">
-        
-    </section>
+    
 
+    <div class="post-meta">
+      <time datetime="2016-08-23" class="post-meta__date date">2016-08-23</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/iOS/">iOS</a>, <a class="tags-link" href="/tags/pageView/">pageView</a>, <a class="tags-link" href="/tags/scrollView/">scrollView</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
 
   </header>
 
+  <section id="post-content" class="article-content post">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这段时间很少写博客了，不是自己变懒惰是确实变得忙碌起来了。前一阵子做了很多旧项目代码迁移工作，发现当自己要完全去理解别人的代码做迁移难度可能要比自己去实现一个功能更为困难。</p>
+<p>这篇博客是前段时间自己因为需求开发的一个常用控件，是现在很多APP都会有可左滑右滑的切换顶栏。我写的大概就是这样的控件。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实github关于这一类型的开源其实不少，但是很多在当你有多个view，由于没有重用机制，会导致内存同时维护多个view，造成内存压力。如果我们在 scrollView 上来对其进行重用生命周期的管理会显得相对的麻烦。利用 collectionView 的自动重用机制可以较好的解决这一个问题。</p>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://zen3-blog.oss-cn-shenzhen.aliyuncs.com/scrollPageView/iu.gif" alt=""></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>主要借助demo，github地址：<br><a href="https://github.com/lzcuriosity/LZScrollPageView" target="_blank" rel="external"><strong>LZScrollPageView</strong></a></p>
+<p>说明：文件 <strong>LZSegmentStyle.h</strong> 注释中有样式的定义。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最近启动了一个创业项目，开始疯狂忙碌模式了。希望有所收获，无怨无悔。</p>
+
+  </section>
+
+  
+  
+
+<section class="post-comments">
+
+    <div class="ds-thread" data-thread-key="2016/08/23/源码分享：ScrollPageView/"></div>
+
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"lzcuriosity"};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+    </script> 
+
+</section>
+
+
 </article>
 
-<div class="archive-meta">
 
-
-
-
-    <h3>标签</h3>
-    <div class="tagslist">
-        
-            
-                <span><a href="/tags/iOS/" title="iOS">iOS<sup>19</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/Objective-C/" title="Objective-C">Objective-C<sup>4</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/源码分享/" title="源码分享">源码分享<sup>3</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/UIWindow/" title="UIWindow">UIWindow<sup>2</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/笔记/" title="笔记">笔记<sup>2</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/设计/" title="设计">设计<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/视图/" title="视图">视图<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/NSObject/" title="NSObject">NSObject<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/Cache/" title="Cache">Cache<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/沙盒/" title="沙盒">沙盒<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/cocoapod/" title="cocoapod">cocoapod<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/CoreSpotlight/" title="CoreSpotlight">CoreSpotlight<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/NSRunLoop/" title="NSRunLoop">NSRunLoop<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/scrollView/" title="scrollView">scrollView<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/pageView/" title="pageView">pageView<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/我的第一篇博文/" title="我的第一篇博文">我的第一篇博文<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/UIApplication/" title="UIApplication">UIApplication<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/block/" title="block">block<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/WebView/" title="WebView">WebView<sup>1</sup></a></span>
-            
-        
-            
-                <span><a href="/tags/Runtime/" title="Runtime">Runtime<sup>1</sup></a></span>
-            
-        
-    </div>
-
-
-
-    <h3>归档</h3>
-    <div class="archiveslist">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li></ul>
-    </div>
-
-
-</div>
             <footer class="footer">
 
     <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
@@ -338,6 +297,18 @@ classes that you can use:
 
 
     
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
     
     
     <!--kill ie6 -->
